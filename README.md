@@ -1,3 +1,4 @@
 # go_exercises
-
-Please choose from drop down branches above to access to exercise's contains
+## exercise about applying goroutines and channel
+Count the number of occurrences of a word in a folder containing multiple text files. 
+Requirements: use normal method and concurrent method then compare which one is faster
