@@ -13,7 +13,7 @@
 User:
     
 | API            | Method | URL                     | Notes/TODO              | Done |
-| -------------- |:------:|:-----------------------:|:-----------------------:| ---: |
+| -------------- |:------:|:------------------------|:------------------------| ---- |
 | sign up        | POST   | users                   |                         |  []  |
 | sign in        | GET    | users/:usr-id/token     | add token later         |  []  |
 | get all        | GET    | users                   | only admin & pagination |  []  |
