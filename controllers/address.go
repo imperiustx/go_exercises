@@ -19,7 +19,6 @@ func CreateAddress(c *gin.Context) {
 	}
 
 	// Create address
-
 	db.Create(&models.Address{
 		FullAddress: address.FullAddress,
 		Latitude:    address.Latitude,
