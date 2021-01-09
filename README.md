@@ -6,7 +6,7 @@
 
 # DB Diagram
 
-![DB Diagram](db_diagram_v001.png)
+![DB Diagram](./db/db_diagram_v001.png)
 
 # APIs
 
