@@ -40,5 +40,10 @@ func main() {
 	r.GET("/payment-methods/:pm-id", controllers.GetPayment)
 	r.PUT("/payment-methods/:pm-id", controllers.UpdatePayment)
 
+	r.POST("/restaurants", controllers.CreateRestaurant)
+	r.GET("/restaurants", controllers.GetAllRestaurants)
+	r.GET("/restaurants/:res-id", controllers.GetRestaurant)
+	r.PUT("/restaurants/:res-id", controllers.UpdateRestaurant)
+
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
