@@ -20,11 +20,28 @@ User:
 | get single     | GET    | users/:usr-id           | add token later         |   []   |
 | update single  | PUT    | users/:usr-id           |                         |   []   |
 | delete single  | DELETE | users/:usr-id           | only admin              |   []   |
-| update address | PUT    | users/:usr-id/address   |                         |   []   |
 | update payment | PUT    | users/:usr-id/payment   |                         |   []   |
 | favorite food  | PUT    | users/:usr-id/food      |                         |   []   |
 | favorite res   | PUT    | users/:usr-id/res       | restaurant              |   []   |
 | rating         | PUT    | users/:usr-id/rating    | rate & review           |   []   |
+
+Address:
+    
+| API               | Method | URL                     | Notes/TODO            | Done   |
+| ----------------- |:------:|:------------------------|:----------------------| :----: |
+| create new        | POST   | addresses               |                       |   []   |
+| update address    | PUT    | addresses/:add-id/      |                       |   []   |
+| get address       | GET    | addresses/:add-id/      |                       |   []   |
+| get all addresses | GET    | addresses               |                       |   []   |
+
+Payment Method:
+    
+| API               | Method | URL                     | Notes/TODO            | Done   |
+| ----------------- |:------:|:------------------------|:----------------------| :----: |
+| create new        | POST   | payment-methods         |                       |   []   |
+| update address    | PUT    | payment-methods/:pm-id/ |                       |   []   |
+| get address       | GET    | payment-methods/:pm-id/ |                       |   []   |
+| get all addresses | GET    | payment-methods         |                       |   []   |
 
 
 Restaurant:
@@ -37,11 +54,16 @@ User:
 | get all res     | GET    | restaurants                 | only admin & pagination |   []   |
 | update res      | PUT    | restaurants/:res-id         |                         |   []   |
 | delete res      | DELETE | restaurants/:res-id         | only admin              |   []   |
-| create new food | POST   | restaurants/:res-id/foods   |                         |   []   |
-| update food     | PUT    | restaurants/:res-id/food    | only res admin          |   []   |
-| delete food     | DELETE | restaurants/:res-id/food    | only res admin          |   []   |
-| get all foods   | GET    | restaurants/:res-id/foods   | pagination              |   []   |
 
+
+Food:
+    
+| API             | Method | URL                         | Notes/TODO              | Done   |
+| --------------- |:------:|:----------------------------|:------------------------| :----: |
+| create new food | POST   | foods                       |                         |   []   |
+| update food     | PUT    | foods/:food-id              | only res admin          |   []   |
+| delete food     | DELETE | foods/:food-id              | only res admin          |   []   |
+| get all foods   | GET    | foods                       | pagination              |   []   |
 
 Order:
 
