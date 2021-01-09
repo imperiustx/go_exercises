@@ -30,5 +30,15 @@ func main() {
 	r.GET("/users/:usr-id", controllers.GetUser)
 	r.PUT("/users/:usr-id", controllers.UpdateUser)
 
+	r.POST("/addresses", controllers.CreateAddress)
+	r.GET("/addresses", controllers.GetAllAddresses)
+	r.GET("/addresses/:add-id", controllers.GetAddress)
+	r.PUT("/addresses/:add-id", controllers.UpdateAddress)
+
+	r.POST("/payment-methods", controllers.CreatePaymentMethod)
+	r.GET("/payment-methods", controllers.GetAllPayments)
+	r.GET("/payment-methods/:pm-id", controllers.GetPayment)
+	r.PUT("/payment-methods/:pm-id", controllers.UpdatePayment)
+
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
