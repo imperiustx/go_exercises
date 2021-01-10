@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/controllers"
 	"github.com/imperiustx/go_excercises/models"
+	"github.com/imperiustx/go_excercises/module/user/usermodel"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&usermodel.User{})
 	db.AutoMigrate(&models.UserAddress{})
 	db.AutoMigrate(&models.UserPaymentMethod{})
 	db.AutoMigrate(&models.Address{})
@@ -34,6 +35,7 @@ func main() {
 	r.GET("/users", controllers.GetAllUsers)
 	r.GET("/users/:usr-id", controllers.GetUser)
 	r.PUT("/users/:usr-id", controllers.UpdateUser)
+	r.DELETE("/users/:usr-id", controllers.DeleteUser)
 	r.POST("/users/address", controllers.CreateUserAddress)
 	r.POST("/users/payment-method", controllers.CreateUserPaymentMethod)
 
@@ -52,5 +54,5 @@ func main() {
 	r.GET("/restaurants/:res-id", controllers.GetRestaurant)
 	r.PUT("/restaurants/:res-id", controllers.UpdateRestaurant)
 
-	r.Run() // listen and serve on 0.0.0.0:8080 
+	r.Run() // listen and serve on 0.0.0.0:8080
 }

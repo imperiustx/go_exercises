@@ -4,14 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/imperiustx/go_excercises/models"
+	"github.com/imperiustx/go_excercises/module/user/userbusiness"
+	"github.com/imperiustx/go_excercises/module/user/usermodel"
+	"github.com/imperiustx/go_excercises/module/user/userstorage"
 	"gorm.io/gorm"
 )
 
 // CreateUser new user
 func CreateUser(c *gin.Context) {
 	// TODO: Validate input
-	var user models.User
+	var user usermodel.User
 	db := c.MustGet("db").(*gorm.DB)
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -19,49 +21,50 @@ func CreateUser(c *gin.Context) {
 	}
 
 	// Create user
+	store := userstorage.NewSQLStore(db)
+	bizUser := userbusiness.NewCreateUserBiz(store)
 
-	db.Create(&models.User{
+	if err := bizUser.CreateUser(&usermodel.User{
 		FullName:    user.FullName,
 		Email:       user.Email,
 		Password:    user.Password,
 		PhoneNumber: user.PhoneNumber,
-	})
+	}); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{"data": user})
 }
 
-// GetAllUsers all user
+// GetAllUsers all users
 func GetAllUsers(c *gin.Context) {
-	var users []models.User
-
 	db := c.MustGet("db").(*gorm.DB)
-
-	db.Select("full_name", "email", "phone_number").Find(&users)
+	store := userstorage.NewSQLStore(db)
+	bizUser := userbusiness.NewListUserBiz(store)
+	users, err := bizUser.ListAllUser()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
 // GetUser a user
 func GetUser(c *gin.Context) {
-	var user models.User
+	var user usermodel.User
 
 	id := c.Param("usr-id")
-
 	db := c.MustGet("db").(*gorm.DB)
+	store := userstorage.NewSQLStore(db)
+	bizUser := userbusiness.NewGetUserBiz(store)
 
-	/*
-	
-	TODO: convert below
-		SELECT full_name, email, phone_number, full_address, bank_name, number
-		FROM users u
-		INNER JOIN user_addresses ON u.id = user_addresses.id
-		INNER JOIN addresses a ON user_addresses.address_id = a.id
-		INNER JOIN user_payment_methods ON u.id = user_payment_methods.user_id
-		INNER JOIN payment_methods p ON user_payment_methods.id = p.id
-		WHERE u.id = 1;
-	*/
-
-	db.Where("id = ?", id).Select("full_name", "email", "phone_number").Find(&user)
+	user, err := bizUser.GetUser(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
@@ -69,21 +72,44 @@ func GetUser(c *gin.Context) {
 // UpdateUser update
 func UpdateUser(c *gin.Context) {
 	// TODO: Validate input
-	var user models.User
+	var user usermodel.User
 
 	id := c.Param("usr-id")
-
 	db := c.MustGet("db").(*gorm.DB)
+
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	db.Model(&user).Where("id = ?", id).Updates(
-		models.User{
+	store := userstorage.NewSQLStore(db)
+	bizUser := userbusiness.NewUpdateUserBiz(store)
+
+	if err := bizUser.UpdateUser(
+		id,
+		usermodel.User{
 			FullName:    user.FullName,
 			PhoneNumber: user.PhoneNumber,
-		})
+		},
+	); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-		c.JSON(http.StatusOK, gin.H{"data": "updated"})
+	c.JSON(http.StatusOK, gin.H{"data": "updated"})
+}
+
+// DeleteUser a user
+func DeleteUser(c *gin.Context) {
+	id := c.Param("usr-id")
+	db := c.MustGet("db").(*gorm.DB)
+	store := userstorage.NewSQLStore(db)
+	bizUser := userbusiness.NewDeleteUserBiz(store)
+
+	if err := bizUser.DeleteUser(id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": "deleted"})
 }
