@@ -19,6 +19,8 @@ func main() {
 	}
 
 	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.UserAddress{})
+	db.AutoMigrate(&models.UserPaymentMethod{})
 	db.AutoMigrate(&models.Address{})
 	db.AutoMigrate(&models.PaymentMethod{})
 	db.AutoMigrate(&models.Restaurant{})
@@ -32,6 +34,8 @@ func main() {
 	r.GET("/users", controllers.GetAllUsers)
 	r.GET("/users/:usr-id", controllers.GetUser)
 	r.PUT("/users/:usr-id", controllers.UpdateUser)
+	r.POST("/users/address", controllers.CreateUserAddress)
+	r.POST("/users/payment-method", controllers.CreateUserPaymentMethod)
 
 	r.POST("/addresses", controllers.CreateAddress)
 	r.GET("/addresses", controllers.GetAllAddresses)

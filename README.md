@@ -24,6 +24,9 @@ User:
 | favorite food  | PUT    | users/:usr-id/food      |                         |   []   |
 | favorite res   | PUT    | users/:usr-id/res       | restaurant              |   []   |
 | rating         | PUT    | users/:usr-id/rating    | rate & review           |   []   |
+| address        | POST   | users/address           |                         |   []   |
+| payment method | POST   | users/payment-method    |                         |   []   |
+
 
 Address:
     
@@ -33,6 +36,7 @@ Address:
 | update address    | PUT    | addresses/:add-id/      |                       |   []   |
 | get address       | GET    | addresses/:add-id/      |                       |   []   |
 | get all addresses | GET    | addresses               |                       |   []   |
+
 
 Payment Method:
     
@@ -64,6 +68,7 @@ Food:
 | update food     | PUT    | foods/:food-id              | only res admin          |   []   |
 | delete food     | DELETE | foods/:food-id              | only res admin          |   []   |
 | get all foods   | GET    | foods                       | pagination              |   []   |
+
 
 Order:
 
