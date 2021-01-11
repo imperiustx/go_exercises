@@ -1,4 +1,4 @@
-package models
+package restaurantmodel
 
 import "gorm.io/gorm"
 
@@ -10,4 +10,9 @@ type Restaurant struct {
 	Password    string `json:"password"`
 	PhoneNumber string `json:"phone_number"`
 	PriceRange  string `json:"price_range"`
+}
+
+// TableName table name
+func (Restaurant) TableName() string {
+	return "restaurants"
 }

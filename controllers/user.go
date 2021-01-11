@@ -53,8 +53,6 @@ func GetAllUsers(c *gin.Context) {
 
 // GetUser a user
 func GetUser(c *gin.Context) {
-	var user usermodel.User
-
 	id := c.Param("usr-id")
 	db := c.MustGet("db").(*gorm.DB)
 	store := userstorage.NewSQLStore(db)
