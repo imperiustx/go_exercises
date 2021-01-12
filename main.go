@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/controllers"
 	"github.com/imperiustx/go_excercises/models"
+	"github.com/imperiustx/go_excercises/module/address/addressmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 )
@@ -23,7 +24,7 @@ func main() {
 	db.AutoMigrate(&usermodel.User{})
 	db.AutoMigrate(&models.UserAddress{})
 	db.AutoMigrate(&models.UserPaymentMethod{})
-	db.AutoMigrate(&models.Address{})
+	db.AutoMigrate(&addressmodel.Address{})
 	db.AutoMigrate(&models.PaymentMethod{})
 	db.AutoMigrate(&restaurantmodel.Restaurant{})
 

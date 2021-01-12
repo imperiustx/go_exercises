@@ -1,6 +1,8 @@
-package models
+package addressmodel
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 // Address address
 type Address struct {
@@ -8,4 +10,10 @@ type Address struct {
 	FullAddress string  `json:"full_address"`
 	Latitude    float64 `json:"latitude"`
 	Longitude   float64 `json:"longitude"`
+}
+
+
+// TableName table name
+func (Address) TableName() string {
+	return "addresses"
 }
