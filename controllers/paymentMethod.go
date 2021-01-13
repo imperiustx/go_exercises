@@ -4,14 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/imperiustx/go_excercises/models"
+	"github.com/imperiustx/go_excercises/module/paymentmethod/paymentmethodbusiness"
+	"github.com/imperiustx/go_excercises/module/paymentmethod/paymentmethodmodel"
+	"github.com/imperiustx/go_excercises/module/paymentmethod/paymentmethodstorage"
 	"gorm.io/gorm"
 )
 
 // CreatePaymentMethod new payment
 func CreatePaymentMethod(c *gin.Context) {
 	// TODO: Validate input
-	var payment models.PaymentMethod
+	var payment paymentmethodmodel.PaymentMethod
 	db := c.MustGet("db").(*gorm.DB)
 	if err := c.ShouldBindJSON(&payment); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -19,59 +21,81 @@ func CreatePaymentMethod(c *gin.Context) {
 	}
 
 	// Create payment
+	store := paymentmethodstorage.NewSQLStore(db)
+	bizPaymentMethod := paymentmethodbusiness.NewCreatePaymentMethodBiz(store)
 
-	db.Create(&models.PaymentMethod{
+	if err := bizPaymentMethod.CreatePaymentMethod(&paymentmethodmodel.PaymentMethod{
 		BankName: payment.BankName,
 		UserName: payment.UserName,
 		Number:   payment.Number,
-	})
+	}); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{"data": payment})
 }
 
 // GetAllPayments all payment
 func GetAllPayments(c *gin.Context) {
-	var payments []models.PaymentMethod
-
 	db := c.MustGet("db").(*gorm.DB)
 
-	db.Select("bank_name", "user_name", "number").Find(&payments)
+	store := paymentmethodstorage.NewSQLStore(db)
+	bizPaymentMethod := paymentmethodbusiness.NewListPaymentMethodBiz(store)
 
-	c.JSON(http.StatusOK, gin.H{"data": payments})
+	methods, err := bizPaymentMethod.ListAllPaymentMethod()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": methods})
 }
 
 // GetPayment a payment
 func GetPayment(c *gin.Context) {
-	var payment models.PaymentMethod
-
 	id := c.Param("pm-id")
-
 	db := c.MustGet("db").(*gorm.DB)
 
-	db.Where("id = ?", id).Select("bank_name", "user_name", "number").Find(&payment)
+	store := paymentmethodstorage.NewSQLStore(db)
+	bizPaymentMethod := paymentmethodbusiness.NewGetPaymentMethodBiz(store)
 
-	c.JSON(http.StatusOK, gin.H{"data": payment})
+	method, err := bizPaymentMethod.GetPaymentMethod(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": method})
 }
 
 // UpdatePayment update
 func UpdatePayment(c *gin.Context) {
 	// TODO: Validate input
-	var payment models.PaymentMethod
+	var payment paymentmethodmodel.PaymentMethod
 
 	id := c.Param("pm-id")
-
 	db := c.MustGet("db").(*gorm.DB)
+
 	if err := c.ShouldBindJSON(&payment); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	db.Model(&payment).Where("id = ?", id).Updates(
-		models.PaymentMethod{
+	store := paymentmethodstorage.NewSQLStore(db)
+	bizPaymentMethod := paymentmethodbusiness.NewUpdatePaymentMethodBiz(store)
+
+	if err := bizPaymentMethod.UpdatePaymentMethod(
+		id,
+		paymentmethodmodel.PaymentMethod{
 			BankName: payment.BankName,
 			UserName: payment.UserName,
 			Number:   payment.Number,
-		})
+		},
+	); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": "updated"})
 }
