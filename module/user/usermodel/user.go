@@ -4,6 +4,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const EntityName = "User"
+
 // User model
 type User struct {
 	gorm.Model
@@ -11,6 +13,7 @@ type User struct {
 	Email       string `json:"email" gorm:"not null"`
 	Password    string `json:"password" gorm:"not null"`
 	PhoneNumber string `json:"phone_number" gorm:"not null"`
+	Status      int    `json:"status" gorm:"not null"`
 }
 
 // TableName table name
