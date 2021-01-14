@@ -1,8 +1,11 @@
 package useraddressstorage
 
-import "github.com/imperiustx/go_excercises/module/useraddress/useraddressmodel"
+import (
+	"github.com/imperiustx/go_excercises/common"
+	"github.com/imperiustx/go_excercises/module/useraddress/useraddressmodel"
+)
 
-func (s *sqlStore) ListUserAddress() ([]useraddressmodel.UserAddress, error) {
+func (s *sqlStore) ListUserAddress(paging *common.Paging) ([]useraddressmodel.UserAddress, error) {
 	db := s.db
 	var useraddresss []useraddressmodel.UserAddress
 
