@@ -13,7 +13,7 @@ import (
 // CreateUser new user
 func CreateUser(c *gin.Context) {
 	// TODO: Validate input
-	var user usermodel.User
+	var user *usermodel.User
 	db := c.MustGet("db").(*gorm.DB)
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -24,17 +24,12 @@ func CreateUser(c *gin.Context) {
 	store := userstorage.NewSQLStore(db)
 	bizUser := userbusiness.NewCreateUserBiz(store)
 
-	if err := bizUser.CreateUser(&usermodel.User{
-		FullName:    user.FullName,
-		Email:       user.Email,
-		Password:    user.Password,
-		PhoneNumber: user.PhoneNumber,
-	}); err != nil {
+	if err := bizUser.CreateUser(user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"data": user})
+	c.JSON(http.StatusCreated, gin.H{"data": &user})
 }
 
 // GetAllUsers all users
@@ -51,21 +46,6 @@ func GetAllUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
-// GetUser a user
-func GetUser(c *gin.Context) {
-	id := c.Param("usr-id")
-	db := c.MustGet("db").(*gorm.DB)
-	store := userstorage.NewSQLStore(db)
-	bizUser := userbusiness.NewGetUserBiz(store)
-
-	user, err := bizUser.GetUser(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": user})
-}
 
 // UpdateUser update
 func UpdateUser(c *gin.Context) {
