@@ -4,11 +4,14 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/controllers"
 	"github.com/imperiustx/go_excercises/module/address/addressmodel"
+	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
 	"github.com/imperiustx/go_excercises/module/paymentmethod/paymentmethodmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
+	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
 	"github.com/imperiustx/go_excercises/module/useraddress/useraddressmodel"
 	"github.com/imperiustx/go_excercises/module/userpaymentmethod/userpaymentmethodmodel"
 )
@@ -33,18 +36,20 @@ func StartDatabase(r *gin.Engine) *gin.Engine {
 		c.Next()
 	})
 
-	r.POST("/users", controllers.CreateUser)
-	r.GET("/users", controllers.GetAllUsers)
-	r.GET("/users/:usr-id", controllers.GetUser)
-	r.PUT("/users/:usr-id", controllers.UpdateUser)
-	r.DELETE("/users/:usr-id", controllers.DeleteUser)
+	appCtx := appctx.NewAppContext(db)
+
+	r.POST("/users", ginuser.CreateUser(appCtx))
+	r.GET("/users", ginuser.GetAllUsers(appCtx))
+	r.GET("/users/:usr-id", ginuser.GetUser(appCtx))
+	r.PUT("/users/:usr-id", ginuser.UpdateUser(appCtx))
+	r.DELETE("/users/:usr-id", ginuser.DeleteUser(appCtx))
 	r.POST("/users/address", controllers.CreateUserAddress)
 	r.POST("/users/payment-method", controllers.CreateUserPaymentMethod)
 
-	r.POST("/addresses", controllers.CreateAddress)
-	r.GET("/addresses", controllers.GetAllAddresses)
-	r.GET("/addresses/:add-id", controllers.GetAddress)
-	r.PUT("/addresses/:add-id", controllers.UpdateAddress)
+	r.POST("/addresses", ginaddress.CreateAddress(appCtx))
+	r.GET("/addresses", ginaddress.GetAllAddresses(appCtx))
+	r.GET("/addresses/:add-id", ginaddress.GetAddress(appCtx))
+	r.PUT("/addresses/:add-id", ginaddress.UpdateAddress(appCtx))
 
 	r.POST("/payment-methods", controllers.CreatePaymentMethod)
 	r.GET("/payment-methods", controllers.GetAllPayments)
