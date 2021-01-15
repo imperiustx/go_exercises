@@ -1,4 +1,4 @@
-package ginuser
+package ginrestaurant
 
 import (
 	"net/http"
@@ -6,12 +6,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
-	"github.com/imperiustx/go_excercises/module/user/userbusiness"
-	"github.com/imperiustx/go_excercises/module/user/userstorage"
+	"github.com/imperiustx/go_excercises/module/restaurant/restaurantbusiness"
+	"github.com/imperiustx/go_excercises/module/restaurant/restaurantstorage"
 )
 
-// DeleteUser a user
-func DeleteUser(appCtx appctx.AppContext) func(c *gin.Context) {
+// DeleteRestaurant a restaurant
+func DeleteRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		idString := c.Param("usr-id")
 		id, err := strconv.Atoi(idString)
@@ -21,10 +21,10 @@ func DeleteUser(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		store := userstorage.NewSQLStore(db)
-		bizUser := userbusiness.NewDeleteUserBiz(store)
+		store := restaurantstorage.NewSQLStore(db)
+		bizRestaurant := restaurantbusiness.NewDeleteRestaurantBiz(store)
 
-		if err := bizUser.DeleteUser(id); err != nil {
+		if err := bizRestaurant.DeleteRestaurant(id); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}

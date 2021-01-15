@@ -5,16 +5,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
-	"github.com/imperiustx/go_excercises/controllers"
 	"github.com/imperiustx/go_excercises/middleware"
 	"github.com/imperiustx/go_excercises/module/address/addressmodel"
 	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
-	"github.com/imperiustx/go_excercises/module/paymentmethod/paymentmethodmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
+	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
-	"github.com/imperiustx/go_excercises/module/useraddress/useraddressmodel"
-	"github.com/imperiustx/go_excercises/module/userpaymentmethod/userpaymentmethodmodel"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -24,12 +21,18 @@ const (
 )
 
 func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
 
 	r := gin.Default()
 
 	db, err := gorm.Open(mysql.Open(uri), &gorm.Config{})
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	appCtx := appctx.NewAppContext(db)
@@ -37,37 +40,42 @@ func main() {
 	r.Use(middleware.Recover(appCtx))
 
 	// migration
-	db.AutoMigrate(&usermodel.User{})
-	db.AutoMigrate(&useraddressmodel.UserAddress{})
-	db.AutoMigrate(&userpaymentmethodmodel.UserPaymentMethod{})
-	db.AutoMigrate(&addressmodel.Address{})
-	db.AutoMigrate(&paymentmethodmodel.PaymentMethod{})
-	db.AutoMigrate(&restaurantmodel.Restaurant{})
+	if err := db.AutoMigrate(&usermodel.User{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&addressmodel.Address{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&restaurantmodel.Restaurant{}); err != nil {
+		return err
+	}
 
 	// router
-	r.POST("/users", ginuser.CreateUser(appCtx))
-	r.GET("/users", ginuser.GetAllUsers(appCtx))
-	r.GET("/users/:usr-id", ginuser.GetUser(appCtx))
-	r.PUT("/users/:usr-id", ginuser.UpdateUser(appCtx))
-	r.DELETE("/users/:usr-id", ginuser.DeleteUser(appCtx))
-	r.POST("/users/address", controllers.CreateUserAddress)
-	r.POST("/users/payment-method", controllers.CreateUserPaymentMethod)
+	users := r.Group("/users")
+	{
+		users.POST("", ginuser.CreateUser(appCtx))
+		users.GET("", ginuser.GetAllUsers(appCtx))
+		users.GET("/:usr-id", ginuser.GetUser(appCtx))
+		users.PUT("/:usr-id", ginuser.UpdateUser(appCtx))
+		users.DELETE("/:usr-id", ginuser.DeleteUser(appCtx))
+	}
 
-	r.POST("/addresses", ginaddress.CreateAddress(appCtx))
-	r.GET("/addresses", ginaddress.GetAllAddresses(appCtx))
-	r.GET("/addresses/:add-id", ginaddress.GetAddress(appCtx))
-	r.PUT("/addresses/:add-id", ginaddress.UpdateAddress(appCtx))
+	addresses := r.Group("/addresses")
+	{
+		addresses.POST("", ginaddress.CreateAddress(appCtx))
+		addresses.GET("", ginaddress.GetAllAddresses(appCtx))
+		addresses.GET("/:add-id", ginaddress.GetAddress(appCtx))
+		addresses.PUT("/:add-id", ginaddress.UpdateAddress(appCtx))
+	}
 
-	r.POST("/payment-methods", controllers.CreatePaymentMethod)
-	r.GET("/payment-methods", controllers.GetAllPayments)
-	r.GET("/payment-methods/:pm-id", controllers.GetPayment)
-	r.PUT("/payment-methods/:pm-id", controllers.UpdatePayment)
+	restaurants := r.Group("/restaurants")
+	{
+		restaurants.POST("", ginrestaurant.CreateRestaurant(appCtx))
+		restaurants.GET("", ginrestaurant.GetAllRestaurants(appCtx))
+		restaurants.GET("/:res-id", ginrestaurant.GetRestaurant(appCtx))
+		restaurants.PUT("/:res-id", ginrestaurant.UpdateRestaurant(appCtx))
+		restaurants.DELETE("/:res-id", ginrestaurant.DeleteRestaurant(appCtx))
+	}
 
-	r.POST("/restaurants", controllers.CreateRestaurant)
-	r.GET("/restaurants", controllers.GetAllRestaurants)
-	r.GET("/restaurants/:res-id", controllers.GetRestaurant)
-	r.PUT("/restaurants/:res-id", controllers.UpdateRestaurant)
-	r.DELETE("/restaurants/:res-id", controllers.DeleteRestaurant)
-
-	r.Run() // listen and serve on 0.0.0.0:8080
+	return r.Run() // listen and serve on 0.0.0.0:8080
 }

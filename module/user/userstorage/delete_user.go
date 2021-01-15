@@ -1,16 +1,11 @@
 package userstorage
 
-func (s *sqlStore) DeleteUser(id string) error {
+func (s *sqlStore) DeleteUser(id int) error {
 	db := s.db
 
-	/*
-	TODO: fix into this
-	if err := db.Table("notes").
+	if err := db.Table("users").
 		Where("id = ?", id).
 		Update("status", 0).Error; err != nil {
-		return err
-	*/
-	if err := db.Delete("users", id).Error; err != nil {
 		return err
 	}
 
