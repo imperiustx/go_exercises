@@ -2,7 +2,7 @@ package userstorage
 
 import "github.com/imperiustx/go_excercises/module/user/usermodel"
 
-func (s *sqlStore) GetUser(id string) (usermodel.User, error) {
+func (s *sqlStore) GetUser(id int) (usermodel.User, error) {
 	db := s.db
 	var user usermodel.User
 

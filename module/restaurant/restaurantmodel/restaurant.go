@@ -2,6 +2,8 @@ package restaurantmodel
 
 import "gorm.io/gorm"
 
+const EntityName = "Restaurant"
+
 // Restaurant restaurant
 type Restaurant struct {
 	gorm.Model
@@ -10,6 +12,7 @@ type Restaurant struct {
 	Password    string `json:"password"`
 	PhoneNumber string `json:"phone_number"`
 	PriceRange  string `json:"price_range"`
+	Status      int    `json:"status"`
 }
 
 // TableName table name

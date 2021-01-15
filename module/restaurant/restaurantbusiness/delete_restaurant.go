@@ -1,8 +1,15 @@
 package restaurantbusiness
 
+import (
+	"errors"
+
+	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
+)
+
 // DeleteRestaurantStorage delete
 type DeleteRestaurantStorage interface {
-	DeleteRestaurant(id string) error
+	FindRestaurant(id int) (*restaurantmodel.Restaurant, error)
+	DeleteRestaurant(id int) error
 }
 
 type deleteRestaurant struct {
@@ -14,6 +21,19 @@ func NewDeleteRestaurantBiz(store DeleteRestaurantStorage) *deleteRestaurant {
 	return &deleteRestaurant{store: store}
 }
 
-func (biz *deleteRestaurant) DeleteRestaurant(id string) error {
-	return biz.store.DeleteRestaurant(id)
+func (biz *deleteRestaurant) DeleteRestaurant(id int) error {
+	restaurant, err := biz.store.FindRestaurant(id)
+	if err != nil {
+		return err
+	}
+
+	if restaurant.Status == 0 {
+		return errors.New("restaurant note found")
+	}
+
+	if err := biz.store.DeleteRestaurant(id); err != nil {
+		return err
+	}
+
+	return nil
 }

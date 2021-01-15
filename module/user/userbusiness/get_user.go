@@ -4,7 +4,7 @@ import "github.com/imperiustx/go_excercises/module/user/usermodel"
 
 // GetUserStorage get
 type GetUserStorage interface {
-	GetUser(id string) (usermodel.User, error)
+	GetUser(id int) (usermodel.User, error)
 }
 
 type getUser struct {
@@ -16,6 +16,6 @@ func NewGetUserBiz(store GetUserStorage) *getUser {
 	return &getUser{store: store}
 }
 
-func (biz *getUser) GetUser(id string) (usermodel.User, error) {
+func (biz *getUser) GetUser(id int) (usermodel.User, error) {
 	return biz.store.GetUser(id)
 }

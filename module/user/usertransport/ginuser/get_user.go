@@ -2,6 +2,7 @@ package ginuser
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -12,7 +13,9 @@ import (
 // GetUser a user
 func GetUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		id := c.Param("usr-id")
+		idString := c.Param("usr-id")
+		id, err := strconv.Atoi(idString)
+
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
 
