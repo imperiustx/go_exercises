@@ -9,6 +9,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/city/citymodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
+	"github.com/imperiustx/go_excercises/module/food/foodmodel"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -56,6 +57,9 @@ func migrate(db *gorm.DB) error {
 		return err
 	}
 	if err := db.AutoMigrate(&citymodel.City{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&foodmodel.Food{}); err != nil {
 		return err
 	}
 

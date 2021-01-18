@@ -9,7 +9,7 @@ import (
 
 func (s *sqlStore) ListAddress(ctx context.Context, paging *common.Paging) ([]addressmodel.Address, error) {
 	db := s.db
-	var addresss []addressmodel.Address
+	var addresses []addressmodel.Address
 
 	db = db.Table(addressmodel.Address{}.TableName()).Where("status not in (0)")
 
@@ -26,9 +26,9 @@ func (s *sqlStore) ListAddress(ctx context.Context, paging *common.Paging) ([]ad
 	}
 
 	// id desc
-	if err := db.Order("id asc").Find(&addresss).Error; err != nil {
+	if err := db.Order("id asc").Find(&addresses).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
-	return addresss, nil
+	return addresses, nil
 }

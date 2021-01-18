@@ -24,11 +24,11 @@ func ListCity(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := citystorage.NewSQLStore(db)
 
 		bizCity := citybusiness.NewListCityBiz(store)
-		citys, err := bizCity.ListAllCity(c.Request.Context(), &paging)
+		cities, err := bizCity.ListAllCity(c.Request.Context(), &paging)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		c.JSON(http.StatusOK, common.NewSuccessResponse(citys, paging, nil))
+		c.JSON(http.StatusOK, common.NewSuccessResponse(cities, paging, nil))
 	}
 }

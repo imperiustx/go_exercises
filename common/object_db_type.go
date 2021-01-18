@@ -5,4 +5,5 @@ const (
 	DBTypeRestaurant = 2
 	DBTypeCity       = 3
 	DBTypeAddress    = 4
+	DBTypeFood       = 5
 )
