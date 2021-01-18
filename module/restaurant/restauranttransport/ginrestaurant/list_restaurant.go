@@ -10,11 +10,11 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantstorage"
 )
 
-// GetAllRestaurants a restaurant
-func GetAllRestaurants(appCtx appctx.AppContext) func(c *gin.Context) {
+// ListRestaurant a restaurant
+func ListRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var paging common.Paging
-		
+
 		if err := c.ShouldBind(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
