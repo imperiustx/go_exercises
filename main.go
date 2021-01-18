@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/module/address/addressmodel"
+	"github.com/imperiustx/go_excercises/module/city/citymodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 	"gorm.io/driver/mysql"
@@ -48,10 +49,13 @@ func migrate(db *gorm.DB) error {
 	if err := db.AutoMigrate(&usermodel.User{}); err != nil {
 		return err
 	}
+	if err := db.AutoMigrate(&restaurantmodel.Restaurant{}); err != nil {
+		return err
+	}
 	if err := db.AutoMigrate(&addressmodel.Address{}); err != nil {
 		return err
 	}
-	if err := db.AutoMigrate(&restaurantmodel.Restaurant{}); err != nil {
+	if err := db.AutoMigrate(&citymodel.City{}); err != nil {
 		return err
 	}
 

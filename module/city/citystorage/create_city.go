@@ -1,13 +1,13 @@
-package addressstorage
+package citystorage
 
 import (
 	"context"
 
 	"github.com/imperiustx/go_excercises/common"
-	"github.com/imperiustx/go_excercises/module/address/addressmodel"
+	"github.com/imperiustx/go_excercises/module/city/citymodel"
 )
 
-func (s *sqlStore) CreateAddress(ctx context.Context, data *addressmodel.AddressCreate) error {
+func (s *sqlStore) CreateCity(ctx context.Context, data *citymodel.CityCreate) error {
 	db := s.db
 
 	if err := db.Table(data.TableName()).
