@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
+	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantbusiness"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantstorage"
 )
@@ -24,11 +25,10 @@ func DeleteRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := restaurantstorage.NewSQLStore(db)
 		bizRestaurant := restaurantbusiness.NewDeleteRestaurantBiz(store)
 
-		if err := bizRestaurant.DeleteRestaurant(id); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+		if err := bizRestaurant.DeleteRestaurant(c.Request.Context(), id); err != nil {
+			panic(err)
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": "deleted"})
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(map[string]int{"data": 1}))
 	}
 }

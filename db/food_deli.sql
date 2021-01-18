@@ -1,145 +1,184 @@
-CREATE TABLE `users` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `full_name` varchar(50),
-  `email` varchar(50),
-  `password` varchar(50),
-  `phone_number` varchar(10),
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+drop table if exists addresses;
+
+drop table if exists categories;
+
+drop table if exists category_restaurants;
+
+drop table if exists cities;
+
+drop table if exists food_likes;
+
+drop table if exists food_ratings;
+
+drop table if exists foods;
+
+drop table if exists order_details;
+
+drop table if exists orders;
+
+drop table if exists restaurant_likes;
+
+drop table if exists restaurant_ratings;
+
+drop table if exists restaurants;
+
+drop table if exists users;
+
+create table addresses
+(
+    id         int auto_increment primary key,
+    user_id    int                 not null,
+    city_id    int                 not null,
+    addr       varchar(255)        not null,
+    lat        double null,
+    lng        double null,
+    status     int       default 1 not null,
+    created_at timestamp default current_timestamp null,
+    updated_at timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `user_ratings` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int UNIQUE NOT NULL,
-  `restaurant_id` int UNIQUE NOT NULL,
-  `food_id` int UNIQUE NOT NULL,
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table categories
+(
+    id          int auto_increment primary key,
+    name        varchar(100)        not null,
+    description text null,
+    icon        json null,
+    status      int       default 1 not null,
+    created_at  timestamp default current_timestamp null,
+    updated_at  timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `user_addresses` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int UNIQUE NOT NULL,
-  `address_id` int UNIQUE NOT NULL,
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table category_restaurants
+(
+    category_id   int                 not null,
+    restaurant_id int                 not null,
+    status        int       default 1 not null,
+    created_at    timestamp default current_timestamp null,
+    updated_at    timestamp default current_timestamp on update current_timestamp null,
+    primary key (category_id, restaurant_id),
+    index (restaurant_id)
 );
 
-CREATE TABLE `user_payment_methods` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int UNIQUE NOT NULL,
-  `payment_method_id` int UNIQUE NOT NULL,
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table cities
+(
+    id         int auto_increment primary key,
+    title      varchar(100)        not null,
+    status     int       default 1 not null,
+    created_at timestamp default current_timestamp null,
+    updated_at timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `addresses` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `full_address` varchar(255),
-  `latitude` decimal(8,6),
-  `longitude` decimal(9,6),
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table food_likes
+(
+    user_id    int not null,
+    food_id    int not null,
+    created_at timestamp default current_timestamp null,
+    primary key (user_id, food_id),
+    index (food_id)
 );
 
-CREATE TABLE `payment_methods` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `bank_name` varchar(50),
-  `user_name` varchar(50),
-  `number` varchar(50),
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table food_ratings
+(
+    id         int auto_increment primary key,
+    user_id    int                 not null,
+    food_id    int                 not null,
+    point      float     default 0 null,
+    comment    text null,
+    status     int       default 1 not null,
+    created_at timestamp default current_timestamp null,
+    updated_at timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `restaurants` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(50),
-  `email` varchar(50),
-  `password` varchar(50),
-  `phone_number` varchar(10),
-  `address` varchar(50),
-  `price_range` varchar(50),
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table foods
+(
+    id          int auto_increment primary key,
+    name        varchar(255)        not null,
+    description text null,
+    price       float               not null,
+    images      json                not null,
+    status      int       default 1 not null,
+    created_at  timestamp default current_timestamp null,
+    updated_at  timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `restaurant_addresses` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `restaurant_id` int UNIQUE NOT NULL,
-  `address_id` int UNIQUE NOT NULL,
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table order_details
+(
+    id          int auto_increment primary key,
+    order_id    int                 not null,
+    food_origin json null,
+    price       float               not null,
+    quantity    int                 not null,
+    discount    float     default 0 null,
+    status      int       default 1 not null,
+    created_at  timestamp default current_timestamp null,
+    updated_at  timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `foods` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `restaurant_id` int UNIQUE NOT NULL,
-  `name` varchar(255),
-  `description` text,
-  `price` float,
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table orders
+(
+    id          int auto_increment primary key,
+    user_id     int                 not null,
+    total_price float               not null,
+    status      int       default 1 not null,
+    created_at  timestamp default current_timestamp null,
+    updated_at  timestamp default current_timestamp on update current_timestamp null
 );
 
-CREATE TABLE `orders` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int UNIQUE NOT NULL,
-  `restaurant_id` int UNIQUE NOT NULL,
-  `all_item_price` int,
-  `voucher` int,
-  `shipping_price` int,
-  `total_price` float,
-  `status` varchar(20),
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table restaurant_likes
+(
+    restaurant_id int not null,
+    user_id       int not null,
+    created_at    timestamp default current_timestamp null,
+    primary key (restaurant_id, user_id),
+    index (user_id)
 );
 
-CREATE TABLE `items` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int UNIQUE NOT NULL,
-  `restaurant_id` int UNIQUE NOT NULL,
-  `food_id` int UNIQUE NOT NULL,
-  `created_at` timestamp,
-  `updated_at` timestamp,
-  `deleted_at` timestamp
+create table restaurant_ratings
+(
+    id            int auto_increment primary key,
+    user_id       int                 not null,
+    restaurant_id int                 not null,
+    point         float     default 0 not null,
+    comment       text null,
+    status        int       default 1 not null,
+    created_at    timestamp default current_timestamp null,
+    updated_at    timestamp default current_timestamp on update current_timestamp null
 );
 
-ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `user_ratings` (`user_id`);
+create table restaurants
+(
+    id         int auto_increment primary key,
+    name       varchar(50)         not null,
+    addr       varchar(255)        not null,
+    lat        double null,
+    lng        double null,
+    logo       json                not null,
+    status     int       default 1 not null,
+    created_at timestamp default current_timestamp null,
+    updated_at timestamp default current_timestamp on update current_timestamp null
+);
 
-ALTER TABLE `restaurants` ADD FOREIGN KEY (`id`) REFERENCES `user_ratings` (`restaurant_id`);
+create table users
+(
+    id         int auto_increment primary key,
+    email      varchar(50)         not null,
+    password   varchar(50)         not null,
+    last_name  varchar(50)         not null,
+    first_name varchar(50)         not null,
+    phone      varchar(20) null,
+    role       enum ('user', 'admin') default 'user' not null,
+    salt       varchar(50) null,
+    avatar     json null,
+    status     int       default 1 not null,
+    created_at timestamp default current_timestamp null,
+    updated_at timestamp default current_timestamp on update current_timestamp null,
+    unique (email)
+);
 
-ALTER TABLE `foods` ADD FOREIGN KEY (`id`) REFERENCES `user_ratings` (`food_id`);
-
-ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `user_addresses` (`user_id`);
-
-ALTER TABLE `addresses` ADD FOREIGN KEY (`id`) REFERENCES `user_addresses` (`address_id`);
-
-ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `user_payment_methods` (`user_id`);
-
-ALTER TABLE `payment_methods` ADD FOREIGN KEY (`id`) REFERENCES `user_payment_methods` (`payment_method_id`);
-
-ALTER TABLE `restaurants` ADD FOREIGN KEY (`id`) REFERENCES `restaurant_addresses` (`restaurant_id`);
-
-ALTER TABLE `addresses` ADD FOREIGN KEY (`id`) REFERENCES `restaurant_addresses` (`address_id`);
-
-ALTER TABLE `restaurants` ADD FOREIGN KEY (`id`) REFERENCES `foods` (`restaurant_id`);
-
-ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `orders` (`user_id`);
-
-ALTER TABLE `restaurants` ADD FOREIGN KEY (`id`) REFERENCES `orders` (`restaurant_id`);
-
-ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `items` (`user_id`);
-
-ALTER TABLE `restaurants` ADD FOREIGN KEY (`id`) REFERENCES `items` (`restaurant_id`);
-
-ALTER TABLE `foods` ADD FOREIGN KEY (`id`) REFERENCES `items` (`food_id`);
+create table images
+(
+    id     int auto_increment primary key,
+    url    text not null,
+    width  int  not null,
+    height int  not null,
+);
