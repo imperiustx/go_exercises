@@ -6,6 +6,7 @@ import (
 	"github.com/imperiustx/go_excercises/middleware"
 	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
+	"github.com/imperiustx/go_excercises/module/food/foodtransport/ginfood"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
 )
@@ -31,6 +32,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		restaurants.GET("/:res-id", ginrestaurant.GetRestaurant(appCtx))
 		restaurants.PUT("/:res-id", ginrestaurant.UpdateRestaurant(appCtx))
 		restaurants.DELETE("/:res-id", ginrestaurant.DeleteRestaurant(appCtx))
+	}
+
+	foods := v1.Group("/foods")
+	{
+		foods.POST("", ginfood.CreateFood(appCtx))
+		foods.GET("", ginfood.ListFood(appCtx))
+		foods.GET("/:food-id", ginfood.GetFood(appCtx))
+		foods.PUT("/:food-id", ginfood.UpdateFood(appCtx))
+		foods.DELETE("/:food-id", ginfood.DeleteFood(appCtx))
 	}
 
 	cities := v1.Group("/cities")

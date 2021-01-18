@@ -24,11 +24,11 @@ func ListAddress(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := addressstorage.NewSQLStore(db)
 
 		bizAddress := addressbusiness.NewListAddressBiz(store)
-		addresss, err := bizAddress.ListAllAddress(c.Request.Context(), &paging)
+		addresses, err := bizAddress.ListAllAddress(c.Request.Context(), &paging)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		c.JSON(http.StatusOK, common.NewSuccessResponse(addresss, paging, nil))
+		c.JSON(http.StatusOK, common.NewSuccessResponse(addresses, paging, nil))
 	}
 }

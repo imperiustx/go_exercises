@@ -1,17 +1,17 @@
-package citystorage
+package foodstorage
 
 import (
 	"context"
 
 	"github.com/imperiustx/go_excercises/common"
-	"github.com/imperiustx/go_excercises/module/city/citymodel"
+	"github.com/imperiustx/go_excercises/module/food/foodmodel"
 )
 
-func (s *sqlStore) ListCity(ctx context.Context, paging *common.Paging) ([]citymodel.City, error) {
+func (s *sqlStore) ListFood(ctx context.Context, paging *common.Paging) ([]foodmodel.Food, error) {
 	db := s.db
-	var cities []citymodel.City
+	var foods []foodmodel.Food
 
-	db = db.Table(citymodel.City{}.TableName()).Where("status not in (0)")
+	db = db.Table(foodmodel.Food{}.TableName()).Where("status not in (0)")
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
@@ -26,9 +26,9 @@ func (s *sqlStore) ListCity(ctx context.Context, paging *common.Paging) ([]citym
 	}
 
 	// id desc
-	if err := db.Order("id asc").Find(&cities).Error; err != nil {
+	if err := db.Order("id asc").Find(&foods).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
-	return cities, nil
+	return foods, nil
 }
