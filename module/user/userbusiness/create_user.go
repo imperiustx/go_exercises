@@ -1,8 +1,15 @@
 package userbusiness
 
+import (
+	"context"
+
+	"github.com/imperiustx/go_excercises/common"
+	"github.com/imperiustx/go_excercises/module/user/usermodel"
+)
+
 // CreateUserStorage create
 type CreateUserStorage interface {
-	CreateUser(v interface{}) error
+	CreateUser(ctx context.Context, data *usermodel.UserCreate) error
 }
 
 type createUser struct {
@@ -14,6 +21,10 @@ func NewCreateUserBiz(store CreateUserStorage) *createUser {
 	return &createUser{store: store}
 }
 
-func (biz *createUser) CreateUser(v interface{}) error {
-	return biz.store.CreateUser(v)
+func (biz *createUser) CreateNewUser(ctx context.Context, data *usermodel.UserCreate) error {
+	if err := biz.store.CreateUser(ctx, data); err != nil {
+		return common.ErrCannotCreateEntity(usermodel.EntityName, err)
+	}
+
+	return nil
 }

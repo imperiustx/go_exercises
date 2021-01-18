@@ -1,21 +1,31 @@
 package userbusiness
 
-import "github.com/imperiustx/go_excercises/module/user/usermodel"
+import (
+	"context"
+
+	"github.com/imperiustx/go_excercises/common"
+	"github.com/imperiustx/go_excercises/module/user/usermodel"
+)
 
 // GetUserStorage get
 type GetUserStorage interface {
-	GetUser(id int) (usermodel.User, error)
+	FindUser(ctx context.Context, id int) (*usermodel.User, error)
 }
 
-type getUser struct {
+type getUserBiz struct {
 	store GetUserStorage
 }
 
 // NewGetUserBiz get
-func NewGetUserBiz(store GetUserStorage) *getUser {
-	return &getUser{store: store}
+func NewGetUserBiz(store GetUserStorage) *getUserBiz {
+	return &getUserBiz{store: store}
 }
 
-func (biz *getUser) GetUser(id int) (usermodel.User, error) {
-	return biz.store.GetUser(id)
+func (biz *getUserBiz) GetUser(ctx context.Context, id int) (*usermodel.User, error) {
+	user, err := biz.store.FindUser(ctx, id)
+	if err != nil {
+		return nil, common.ErrCannotGetEntity(usermodel.EntityName, err)
+	}
+
+	return user, nil
 }

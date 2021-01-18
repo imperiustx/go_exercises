@@ -1,18 +1,19 @@
 package restaurantmodel
 
-import "gorm.io/gorm"
+import (
+	"github.com/imperiustx/go_excercises/common"
+)
 
 const EntityName = "Restaurant"
 
 // Restaurant restaurant
 type Restaurant struct {
-	gorm.Model
-	Name        string `json:"name"`
-	Email       string `json:"email"`
-	Password    string `json:"password"`
-	PhoneNumber string `json:"phone_number"`
-	PriceRange  string `json:"price_range"`
-	Status      int    `json:"status"`
+	common.SQLModel
+	Name      string        `json:"name" gorm:"not null"`
+	Address   string        `json:"address" gorm:"not null"`
+	Latitude  float64       `json:"latitude"`
+	Longitude float64       `json:"longitude"`
+	Logo      *common.Image `json:"logo" gorm:"not null"`
 }
 
 // TableName table name

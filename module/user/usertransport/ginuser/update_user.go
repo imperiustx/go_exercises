@@ -1,11 +1,12 @@
 package ginuser
 
 import (
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
+	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/user/userbusiness"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
@@ -14,31 +15,26 @@ import (
 // UpdateUser a user
 func UpdateUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		// TODO: Validate input
-		var user usermodel.User
+		var user usermodel.UserUpdate
 
-		id := c.Param("usr-id")
+		if err := c.ShouldBind(&user); err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
 		db := appCtx.GetDBConnection()
-
-		if err := c.ShouldBindJSON(&user); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+		idString := c.Param("usr-id")
+		id, err := strconv.Atoi(idString)
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
 		}
 
 		store := userstorage.NewSQLStore(db)
 		bizUser := userbusiness.NewUpdateUserBiz(store)
 
-		if err := bizUser.UpdateUser(
-			id,
-			usermodel.User{
-				FullName:    user.FullName,
-				PhoneNumber: user.PhoneNumber,
-			},
-		); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+		if err := bizUser.UpdateUser(c.Request.Context(), id, &user); err != nil {
+			panic(err)
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": fmt.Sprintf("user %s updated", id)})
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(true))
 	}
 }

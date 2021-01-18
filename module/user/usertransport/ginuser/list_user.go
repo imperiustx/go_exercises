@@ -10,10 +10,11 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
-// GetAllUsers a user
-func GetAllUsers(appCtx appctx.AppContext) func(c *gin.Context) {
+// ListUser a user
+func ListUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var paging common.Paging
+		
 		if err := c.ShouldBind(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

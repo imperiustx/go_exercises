@@ -1,19 +1,22 @@
 package usermodel
 
 import (
-	"gorm.io/gorm"
+	"github.com/imperiustx/go_excercises/common"
 )
 
 const EntityName = "User"
 
 // User model
 type User struct {
-	gorm.Model
-	FullName    string `json:"full_name" gorm:"not null"`
-	Email       string `json:"email" gorm:"not null"`
-	Password    string `json:"password" gorm:"not null"`
-	PhoneNumber string `json:"phone_number" gorm:"not null"`
-	Status      int    `json:"status" gorm:"not null"`
+	common.SQLModel
+	Email     string `json:"email" gorm:"not null"`
+	Password  string `json:"password" gorm:"not null"`
+	FirstName string `json:"first_name" gorm:"not null"`
+	LastName  string `json:"last_name" gorm:"not null"`
+	Phone     string `json:"phone"`
+	Role      string `json:"role" gorm:"not null"`
+	Salt      string
+	Avatar    *common.Image `json:"avatar"`
 }
 
 // TableName table name
