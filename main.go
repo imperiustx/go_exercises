@@ -5,11 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
-	"github.com/imperiustx/go_excercises/module/address/addressmodel"
-	"github.com/imperiustx/go_excercises/module/city/citymodel"
-	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
-	"github.com/imperiustx/go_excercises/module/user/usermodel"
-	"github.com/imperiustx/go_excercises/module/food/foodmodel"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -28,11 +23,13 @@ func run() error {
 
 	r := gin.Default()
 
+	// db
 	db, err := gorm.Open(mysql.Open(uri), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
+	// ctx
 	appCtx := appctx.NewAppContext(db)
 
 	// migration
@@ -44,24 +41,4 @@ func run() error {
 	setupRouter(r, appCtx)
 
 	return r.Run() // listen and serve on 0.0.0.0:8080
-}
-
-func migrate(db *gorm.DB) error {
-	if err := db.AutoMigrate(&usermodel.User{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&restaurantmodel.Restaurant{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&addressmodel.Address{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&citymodel.City{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&foodmodel.Food{}); err != nil {
-		return err
-	}
-
-	return nil
 }

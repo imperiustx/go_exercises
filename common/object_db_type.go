@@ -6,4 +6,6 @@ const (
 	DBTypeCity       = 3
 	DBTypeAddress    = 4
 	DBTypeFood       = 5
+	DBTypeCategory   = 6
+	DBTypeOrder      = 7
 )
