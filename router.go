@@ -8,6 +8,8 @@ import (
 	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
 	"github.com/imperiustx/go_excercises/module/category/categorymodel"
 	"github.com/imperiustx/go_excercises/module/category/categorytransport/gincategory"
+	"github.com/imperiustx/go_excercises/module/categoryrestaurant/categoryrestaurantmodel"
+	"github.com/imperiustx/go_excercises/module/categoryrestaurant/catrestransport/gincategoryrestaurant"
 	"github.com/imperiustx/go_excercises/module/city/citymodel"
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
 	"github.com/imperiustx/go_excercises/module/food/foodmodel"
@@ -41,6 +43,10 @@ func migrate(db *gorm.DB) error {
 		return err
 	}
 	if err := db.AutoMigrate(&ordermodel.Order{}); err != nil {
+		return err
+	}
+
+	if err := db.AutoMigrate(&categoryrestaurantmodel.CategoryRestaurant{}); err != nil {
 		return err
 	}
 
@@ -112,6 +118,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		orders.GET("", ginorder.ListOrder(appCtx))
 		orders.GET("/:food-id", ginorder.GetOrder(appCtx))
 		orders.DELETE("/:food-id", ginorder.DeleteOrder(appCtx))
+	}
+
+	categoryrestaurants := v1.Group("/cat-res")
+	{
+		categoryrestaurants.POST("", gincategoryrestaurant.CreateCategoryRestaurant(appCtx))
+		categoryrestaurants.GET("", gincategoryrestaurant.ListCategoryRestaurant(appCtx))
+		categoryrestaurants.GET("/:cat-id/:res-id", gincategoryrestaurant.GetCategoryRestaurant(appCtx))
+		categoryrestaurants.PUT("/:cat-id/:res-id", gincategoryrestaurant.UpdateCategoryRestaurant(appCtx))
+		categoryrestaurants.DELETE("/:cat-id/:res-id", gincategoryrestaurant.DeleteCategoryRestaurant(appCtx))
 	}
 }
 
