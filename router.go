@@ -14,6 +14,10 @@ import (
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
 	"github.com/imperiustx/go_excercises/module/food/foodmodel"
 	"github.com/imperiustx/go_excercises/module/food/foodtransport/ginfood"
+	"github.com/imperiustx/go_excercises/module/foodlike/foodlikemodel"
+	"github.com/imperiustx/go_excercises/module/foodlike/foodliketransport/ginfoodlike"
+	"github.com/imperiustx/go_excercises/module/foodrating/foodratingmodel"
+	"github.com/imperiustx/go_excercises/module/foodrating/foodratingtransport/ginfoodrating"
 	"github.com/imperiustx/go_excercises/module/order/ordermodel"
 	"github.com/imperiustx/go_excercises/module/order/ordertransport/ginorder"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
@@ -50,6 +54,14 @@ func migrate(db *gorm.DB) error {
 		return err
 	}
 
+	if err := db.AutoMigrate(&foodlikemodel.FoodLike{}); err != nil {
+		return err
+	}
+
+	if err := db.AutoMigrate(&foodratingmodel.FoodRating{}); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -83,6 +95,23 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		foods.GET("/:food-id", ginfood.GetFood(appCtx))
 		foods.PUT("/:food-id", ginfood.UpdateFood(appCtx))
 		foods.DELETE("/:food-id", ginfood.DeleteFood(appCtx))
+	}
+
+	foodlikes := v1.Group("/foodlikes")
+	{
+		foodlikes.POST("", ginfoodlike.CreateFoodLike(appCtx))
+		foodlikes.GET("", ginfoodlike.ListFoodLike(appCtx))
+		foodlikes.GET("/:uid/:fid", ginfoodlike.GetFoodLike(appCtx))
+		foodlikes.DELETE("/:uid/:fid", ginfoodlike.DeleteFoodLike(appCtx))
+	}
+
+	foodratings := v1.Group("/foodratings")
+	{
+		foodratings.POST("", ginfoodrating.CreateFoodRating(appCtx))
+		foodratings.GET("", ginfoodrating.ListFoodRating(appCtx))
+		foodratings.GET("/:fr-id", ginfoodrating.GetFoodRating(appCtx))
+		foodratings.PUT("/:fr-id", ginfoodrating.UpdateFoodRating(appCtx))
+		foodratings.DELETE("/:fr-id", ginfoodrating.DeleteFoodRating(appCtx))
 	}
 
 	cities := v1.Group("/cities")
@@ -124,9 +153,9 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		categoryrestaurants.POST("", gincategoryrestaurant.CreateCategoryRestaurant(appCtx))
 		categoryrestaurants.GET("", gincategoryrestaurant.ListCategoryRestaurant(appCtx))
-		categoryrestaurants.GET("/:cat-id/:res-id", gincategoryrestaurant.GetCategoryRestaurant(appCtx))
-		categoryrestaurants.PUT("/:cat-id/:res-id", gincategoryrestaurant.UpdateCategoryRestaurant(appCtx))
-		categoryrestaurants.DELETE("/:cat-id/:res-id", gincategoryrestaurant.DeleteCategoryRestaurant(appCtx))
+		categoryrestaurants.GET("/:cid/:rid", gincategoryrestaurant.GetCategoryRestaurant(appCtx))
+		categoryrestaurants.PUT("/:cid/:rid", gincategoryrestaurant.UpdateCategoryRestaurant(appCtx))
+		categoryrestaurants.DELETE("/:cid/:rid", gincategoryrestaurant.DeleteCategoryRestaurant(appCtx))
 	}
 }
 

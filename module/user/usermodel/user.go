@@ -14,7 +14,7 @@ type User struct {
 	FirstName string `json:"first_name" gorm:"not null"`
 	LastName  string `json:"last_name" gorm:"not null"`
 	Phone     string `json:"phone"`
-	Role      string `json:"role" gorm:"not null"`
+	Role      string `json:"role" gorm:"default:user;not null"`
 	Salt      string
 	Avatar    *common.Image `json:"avatar"`
 }

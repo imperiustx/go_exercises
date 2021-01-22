@@ -12,8 +12,6 @@ import (
 	"github.com/imperiustx/go_excercises/module/categoryrestaurant/categoryrestaurantstorage"
 )
 
-// TODO: fix id
-
 // UpdateCategoryRestaurant a categoryrestaurant
 func UpdateCategoryRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
@@ -24,12 +22,12 @@ func UpdateCategoryRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		cidString := c.Param("cat-id")
+		cidString := c.Param("cid")
 		cid, err := strconv.Atoi(cidString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-		ridString := c.Param("res-id")
+		ridString := c.Param("rid")
 		rid, err := strconv.Atoi(ridString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))

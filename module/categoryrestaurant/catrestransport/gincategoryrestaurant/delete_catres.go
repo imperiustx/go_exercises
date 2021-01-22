@@ -14,12 +14,12 @@ import (
 // DeleteCategoryRestaurant a categoryrestaurant
 func DeleteCategoryRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		cidString := c.Param("cat-id")
+		cidString := c.Param("cid")
 		cid, err := strconv.Atoi(cidString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-		ridString := c.Param("res-id")
+		ridString := c.Param("rid")
 		rid, err := strconv.Atoi(ridString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
