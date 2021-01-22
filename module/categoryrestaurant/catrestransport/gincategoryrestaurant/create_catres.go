@@ -28,8 +28,7 @@ func CreateCategoryRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err := bizCategoryRestaurant.CreateNewCategoryRestaurant(c.Request.Context(), &categoryrestaurant); err != nil {
 			panic(err)
 		}
-		categoryrestaurant.GenUID(common.DBTypeCategoryRestaurant, 1)
 
-		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(categoryrestaurant.FakeID))
+		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(categoryrestaurant))
 	}
 }
