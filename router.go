@@ -24,6 +24,8 @@ import (
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
+	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingmodel"
+	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
 	"gorm.io/gorm"
@@ -34,6 +36,9 @@ func migrate(db *gorm.DB) error {
 		return err
 	}
 	if err := db.AutoMigrate(&restaurantmodel.Restaurant{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&restaurantratingmodel.RestaurantRating{}); err != nil {
 		return err
 	}
 	if err := db.AutoMigrate(&addressmodel.Address{}); err != nil {
@@ -88,6 +93,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		restaurants.GET("/:res-id", ginrestaurant.GetRestaurant(appCtx))
 		restaurants.PUT("/:res-id", ginrestaurant.UpdateRestaurant(appCtx))
 		restaurants.DELETE("/:res-id", ginrestaurant.DeleteRestaurant(appCtx))
+	}
+
+	restaurantratings := v1.Group("/restaurantratings")
+	{
+		restaurantratings.POST("", ginrestaurantrating.CreateRestaurantRating(appCtx))
+		restaurantratings.GET("", ginrestaurantrating.ListRestaurantRating(appCtx))
+		restaurantratings.GET("/:res-id", ginrestaurantrating.GetRestaurantRating(appCtx))
+		restaurantratings.PUT("/:res-id", ginrestaurantrating.UpdateRestaurantRating(appCtx))
+		restaurantratings.DELETE("/:res-id", ginrestaurantrating.DeleteRestaurantRating(appCtx))
 	}
 
 	foods := v1.Group("/foods")

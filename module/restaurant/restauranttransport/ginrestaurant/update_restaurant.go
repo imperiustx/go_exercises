@@ -23,7 +23,7 @@ func UpdateRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		idString := c.Param("usr-id")
+		idString := c.Param("res-id")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
