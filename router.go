@@ -20,6 +20,8 @@ import (
 	"github.com/imperiustx/go_excercises/module/foodrating/foodratingtransport/ginfoodrating"
 	"github.com/imperiustx/go_excercises/module/order/ordermodel"
 	"github.com/imperiustx/go_excercises/module/order/ordertransport/ginorder"
+	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
+	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
@@ -49,16 +51,16 @@ func migrate(db *gorm.DB) error {
 	if err := db.AutoMigrate(&ordermodel.Order{}); err != nil {
 		return err
 	}
-
 	if err := db.AutoMigrate(&categoryrestaurantmodel.CategoryRestaurant{}); err != nil {
 		return err
 	}
-
 	if err := db.AutoMigrate(&foodlikemodel.FoodLike{}); err != nil {
 		return err
 	}
-
 	if err := db.AutoMigrate(&foodratingmodel.FoodRating{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&orderdetailmodel.OrderDetail{}); err != nil {
 		return err
 	}
 
@@ -145,8 +147,18 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		orders.POST("", ginorder.CreateOrder(appCtx))
 		orders.GET("", ginorder.ListOrder(appCtx))
-		orders.GET("/:food-id", ginorder.GetOrder(appCtx))
-		orders.DELETE("/:food-id", ginorder.DeleteOrder(appCtx))
+		orders.GET("/:ord-id", ginorder.GetOrder(appCtx))
+		orders.PUT("/:ord-id", ginorder.UpdateOrder(appCtx))
+		orders.DELETE("/:ord-id", ginorder.DeleteOrder(appCtx))
+	}
+
+	orderdetails := v1.Group("/orderdetails")
+	{
+		orderdetails.POST("", ginorderdetail.CreateOrderDetail(appCtx))
+		orderdetails.GET("", ginorderdetail.ListOrderDetail(appCtx))
+		orderdetails.GET("/:ord-id", ginorderdetail.GetOrderDetail(appCtx))
+		orderdetails.PUT("/:ord-id", ginorderdetail.UpdateOrderDetail(appCtx))
+		orderdetails.DELETE("/:ord-id", ginorderdetail.DeleteOrderDetail(appCtx))
 	}
 
 	categoryrestaurants := v1.Group("/cat-res")

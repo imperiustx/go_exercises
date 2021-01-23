@@ -1,4 +1,4 @@
 ### Food Delevery Service
 
-## Using Gin, GORM
+## Using Gin, GORM, Mysql
 
