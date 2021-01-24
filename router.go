@@ -18,12 +18,16 @@ import (
 	"github.com/imperiustx/go_excercises/module/foodlike/foodliketransport/ginfoodlike"
 	"github.com/imperiustx/go_excercises/module/foodrating/foodratingmodel"
 	"github.com/imperiustx/go_excercises/module/foodrating/foodratingtransport/ginfoodrating"
+	"github.com/imperiustx/go_excercises/module/image/imagemodel"
+	"github.com/imperiustx/go_excercises/module/image/imagetransport/ginimage"
 	"github.com/imperiustx/go_excercises/module/order/ordermodel"
 	"github.com/imperiustx/go_excercises/module/order/ordertransport/ginorder"
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
+	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
+	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingmodel"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
@@ -39,6 +43,9 @@ func migrate(db *gorm.DB) error {
 		return err
 	}
 	if err := db.AutoMigrate(&restaurantratingmodel.RestaurantRating{}); err != nil {
+		return err
+	}
+	if err := db.AutoMigrate(&restaurantlikemodel.RestaurantLike{}); err != nil {
 		return err
 	}
 	if err := db.AutoMigrate(&addressmodel.Address{}); err != nil {
@@ -68,6 +75,9 @@ func migrate(db *gorm.DB) error {
 	if err := db.AutoMigrate(&orderdetailmodel.OrderDetail{}); err != nil {
 		return err
 	}
+	if err := db.AutoMigrate(&imagemodel.Image{}); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -95,13 +105,21 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		restaurants.DELETE("/:res-id", ginrestaurant.DeleteRestaurant(appCtx))
 	}
 
-	restaurantratings := v1.Group("/restaurantratings")
+	restaurantratings := v1.Group("/res-ratings")
 	{
 		restaurantratings.POST("", ginrestaurantrating.CreateRestaurantRating(appCtx))
 		restaurantratings.GET("", ginrestaurantrating.ListRestaurantRating(appCtx))
 		restaurantratings.GET("/:res-id", ginrestaurantrating.GetRestaurantRating(appCtx))
 		restaurantratings.PUT("/:res-id", ginrestaurantrating.UpdateRestaurantRating(appCtx))
 		restaurantratings.DELETE("/:res-id", ginrestaurantrating.DeleteRestaurantRating(appCtx))
+	}
+
+	restaurantlikes := v1.Group("/res-likes")
+	{
+		restaurantlikes.POST("", ginrestaurantlike.CreateRestaurantLike(appCtx))
+		restaurantlikes.GET("", ginrestaurantlike.ListRestaurantLike(appCtx))
+		restaurantlikes.GET("/:uid/:rid", ginrestaurantlike.GetRestaurantLike(appCtx))
+		restaurantlikes.DELETE("/:uid/:rid", ginrestaurantlike.DeleteRestaurantLike(appCtx))
 	}
 
 	foods := v1.Group("/foods")
@@ -113,7 +131,7 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		foods.DELETE("/:food-id", ginfood.DeleteFood(appCtx))
 	}
 
-	foodlikes := v1.Group("/foodlikes")
+	foodlikes := v1.Group("/food-likes")
 	{
 		foodlikes.POST("", ginfoodlike.CreateFoodLike(appCtx))
 		foodlikes.GET("", ginfoodlike.ListFoodLike(appCtx))
@@ -121,7 +139,7 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		foodlikes.DELETE("/:uid/:fid", ginfoodlike.DeleteFoodLike(appCtx))
 	}
 
-	foodratings := v1.Group("/foodratings")
+	foodratings := v1.Group("/food-ratings")
 	{
 		foodratings.POST("", ginfoodrating.CreateFoodRating(appCtx))
 		foodratings.GET("", ginfoodrating.ListFoodRating(appCtx))
@@ -166,7 +184,7 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		orders.DELETE("/:ord-id", ginorder.DeleteOrder(appCtx))
 	}
 
-	orderdetails := v1.Group("/orderdetails")
+	orderdetails := v1.Group("/order-details")
 	{
 		orderdetails.POST("", ginorderdetail.CreateOrderDetail(appCtx))
 		orderdetails.GET("", ginorderdetail.ListOrderDetail(appCtx))
@@ -182,6 +200,13 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		categoryrestaurants.GET("/:cid/:rid", gincategoryrestaurant.GetCategoryRestaurant(appCtx))
 		categoryrestaurants.PUT("/:cid/:rid", gincategoryrestaurant.UpdateCategoryRestaurant(appCtx))
 		categoryrestaurants.DELETE("/:cid/:rid", gincategoryrestaurant.DeleteCategoryRestaurant(appCtx))
+	}
+
+	images := v1.Group("/images")
+	{
+		images.POST("", ginimage.CreateImage(appCtx))
+		images.GET("/:usr-id", ginimage.GetImage(appCtx))
+		images.DELETE("/:usr-id", ginimage.DeleteImage(appCtx))
 	}
 }
 
