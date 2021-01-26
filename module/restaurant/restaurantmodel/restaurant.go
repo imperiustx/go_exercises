@@ -9,11 +9,14 @@ const EntityName = "Restaurant"
 // Restaurant restaurant
 type Restaurant struct {
 	common.SQLModel
-	Name      string        `json:"name" gorm:"not null"`
-	Address   string        `json:"address" gorm:"not null"`
-	Latitude  float64       `json:"latitude"`
-	Longitude float64       `json:"longitude"`
-	Logo      *common.Image `json:"logo" gorm:"not null"`
+	OwnerID     int           `json:"owner_id" gorm:"not null"`
+	Name        string        `json:"name" gorm:"not null"`
+	Address     string        `json:"address" gorm:"not null"`
+	CityID      int           `json:"city_id"`
+	Latitude    float64       `json:"latitude"`
+	Longitude   float64       `json:"longitude"`
+	Logo        *common.Image `json:"logo" gorm:"not null"`
+	ShippingFee int           `json:"shipping_fee" gorm:"not null;default: 0"`
 }
 
 // TableName table name

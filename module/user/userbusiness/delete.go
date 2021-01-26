@@ -10,8 +10,8 @@ import (
 
 // DeleteUserStorage delete
 type DeleteUserStorage interface {
-	FindUser(ctx context.Context, id int) (*usermodel.User, error)
-	DeleteUser(id int) error
+	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) (*usermodel.User, error)
+	DeleteUser(conditions map[string]interface{}) error
 }
 
 type deleteUser struct {
@@ -23,8 +23,8 @@ func NewDeleteUserBiz(store DeleteUserStorage) *deleteUser {
 	return &deleteUser{store: store}
 }
 
-func (biz *deleteUser) DeleteUser(ctx context.Context, id int) error {
-	user, err := biz.store.FindUser(ctx, id)
+func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) error {
+	user, err := biz.store.FindUser(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(usermodel.EntityName, err)
 	}
@@ -33,7 +33,7 @@ func (biz *deleteUser) DeleteUser(ctx context.Context, id int) error {
 		return common.ErrCannotGetEntity(usermodel.EntityName, errors.New("user not found"))
 	}
 
-	if err := biz.store.DeleteUser(id); err != nil {
+	if err := biz.store.DeleteUser(conditions); err != nil {
 		return err
 	}
 
