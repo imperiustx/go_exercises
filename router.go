@@ -4,83 +4,21 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/middleware"
-	"github.com/imperiustx/go_excercises/module/address/addressmodel"
 	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
-	"github.com/imperiustx/go_excercises/module/category/categorymodel"
 	"github.com/imperiustx/go_excercises/module/category/categorytransport/gincategory"
-	"github.com/imperiustx/go_excercises/module/categoryrestaurant/categoryrestaurantmodel"
 	"github.com/imperiustx/go_excercises/module/categoryrestaurant/catrestransport/gincategoryrestaurant"
-	"github.com/imperiustx/go_excercises/module/city/citymodel"
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
-	"github.com/imperiustx/go_excercises/module/food/foodmodel"
 	"github.com/imperiustx/go_excercises/module/food/foodtransport/ginfood"
-	"github.com/imperiustx/go_excercises/module/foodlike/foodlikemodel"
 	"github.com/imperiustx/go_excercises/module/foodlike/foodliketransport/ginfoodlike"
-	"github.com/imperiustx/go_excercises/module/foodrating/foodratingmodel"
 	"github.com/imperiustx/go_excercises/module/foodrating/foodratingtransport/ginfoodrating"
-	"github.com/imperiustx/go_excercises/module/image/imagemodel"
 	"github.com/imperiustx/go_excercises/module/image/imagetransport/ginimage"
-	"github.com/imperiustx/go_excercises/module/order/ordermodel"
 	"github.com/imperiustx/go_excercises/module/order/ordertransport/ginorder"
-	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
-	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
-	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
-	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingmodel"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
-	"github.com/imperiustx/go_excercises/module/user/usermodel"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
-	"gorm.io/gorm"
 )
-
-func migrate(db *gorm.DB) error {
-	if err := db.AutoMigrate(&usermodel.User{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&restaurantmodel.Restaurant{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&restaurantratingmodel.RestaurantRating{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&restaurantlikemodel.RestaurantLike{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&addressmodel.Address{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&citymodel.City{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&foodmodel.Food{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&categorymodel.Category{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&ordermodel.Order{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&categoryrestaurantmodel.CategoryRestaurant{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&foodlikemodel.FoodLike{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&foodratingmodel.FoodRating{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&orderdetailmodel.OrderDetail{}); err != nil {
-		return err
-	}
-	if err := db.AutoMigrate(&imagemodel.Image{}); err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	r.Use(middleware.Recover(appCtx))
@@ -91,9 +29,12 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		users.POST("", ginuser.CreateUser(appCtx))
 		users.GET("", ginuser.ListUser(appCtx))
-		users.GET("/:usr-id", ginuser.GetUser(appCtx))
-		users.PUT("/:usr-id", ginuser.UpdateUser(appCtx))
-		users.DELETE("/:usr-id", ginuser.DeleteUser(appCtx))
+		users.GET("/:user-id", ginuser.GetUser(appCtx))
+		users.PUT("/:user-id", ginuser.UpdateUser(appCtx))
+		users.DELETE("/:user-id", ginuser.DeleteUser(appCtx))
+		users.PUT("/:user-id/reactive", ginuser.ReactiveUser(appCtx))
+		users.POST("/register", ginuser.Register(appCtx))
+		users.POST("/login", ginuser.Login(appCtx))
 	}
 
 	restaurants := v1.Group("/restaurants")

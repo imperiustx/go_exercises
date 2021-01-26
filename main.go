@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	uri = "usr:secret@tcp(localhost:3306)/food_delivery?charset=utf8mb4&parseTime=True&loc=Local"
+	uri    = "usr:secret@tcp(localhost:3306)/food_delivery?charset=utf8mb4&parseTime=True&loc=Local"
+	secret = "secret"
 )
 
 func main() {
@@ -30,12 +31,12 @@ func run() error {
 	}
 
 	// ctx
-	appCtx := appctx.NewAppContext(db)
+	appCtx := appctx.NewAppContext(db, secret)
 
 	// migration
-	if err := migrate(db); err != nil {
-		return err
-	}
+	// if err := migrate(db); err != nil {
+	// 	return err
+	// }
 
 	// router
 	setupRouter(r, appCtx)

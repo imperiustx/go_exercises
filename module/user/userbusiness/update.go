@@ -10,7 +10,7 @@ import (
 
 // UpdateUserStorage update
 type UpdateUserStorage interface {
-	FindUser(ctx context.Context, id int) (*usermodel.User, error)
+	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) (*usermodel.User, error)
 	UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error
 }
 
@@ -24,7 +24,7 @@ func NewUpdateUserBiz(store UpdateUserStorage) *updateUser {
 }
 
 func (biz *updateUser) UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error {
-	user, err := biz.store.FindUser(ctx, id)
+	user, err := biz.store.FindUser(ctx, map[string]interface{}{"id": id})
 	if err != nil {
 		return common.ErrCannotGetEntity(usermodel.EntityName, err)
 	}

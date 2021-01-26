@@ -2,6 +2,7 @@ package ginuser
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -10,25 +11,23 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
-// GetUser a user
-func GetUser(appCtx appctx.AppContext) func(c *gin.Context) {
+// DeleteUser a user
+func DeleteUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("usr-id"))
+		idString := c.Param("user-id")
+		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
+		bizUser := userbusiness.NewDeleteUserBiz(store)
 
-		bizUser := userbusiness.NewGetUserBiz(store)
-		user, err := bizUser.GetUser(c.Request.Context(), int(uid.GetLocalID()))
-		if err != nil {
+		if err := bizUser.DeleteUser(c.Request.Context(), map[string]interface{}{"id": id}); err != nil {
 			panic(err)
 		}
 
-		user.GenUID(common.DBTypeUser, 1)
-
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(user))
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(map[string]int{"data": 1}))
 	}
 }

@@ -11,10 +11,10 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
-// DeleteUser a user
-func DeleteUser(appCtx appctx.AppContext) func(c *gin.Context) {
+// ReactiveUser a user
+func ReactiveUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		idString := c.Param("usr-id")
+		idString := c.Param("user-id")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
@@ -22,9 +22,12 @@ func DeleteUser(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
-		bizUser := userbusiness.NewDeleteUserBiz(store)
+		bizUser := userbusiness.NewReactiveUserBiz(store)
 
-		if err := bizUser.DeleteUser(c.Request.Context(), id); err != nil {
+		if err := bizUser.ReactiveUser(
+			c.Request.Context(),
+			map[string]interface{}{"id": id},
+		); err != nil {
 			panic(err)
 		}
 

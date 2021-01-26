@@ -14,7 +14,7 @@ import (
 func ListUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var paging common.Paging
-		
+
 		if err := c.ShouldBind(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -27,6 +27,10 @@ func ListUser(appCtx appctx.AppContext) func(c *gin.Context) {
 		users, err := bizUser.ListAllUser(c.Request.Context(), &paging)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
+		}
+
+		for i := range users {
+			users[i].GenUID(common.DBTypeUser, 1)
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(users, paging, nil))
