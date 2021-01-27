@@ -9,6 +9,7 @@ type RestaurantCreate struct {
 	Latitude              float64       `json:"latitude"`
 	Longitude             float64       `json:"longitude"`
 	Logo                  *common.Image `json:"logo"`
+	ShippingFee           int           `json:"shipping_fee"`
 }
 
 func (RestaurantCreate) TableName() string {

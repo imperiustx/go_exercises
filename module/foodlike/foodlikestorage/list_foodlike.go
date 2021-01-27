@@ -11,7 +11,7 @@ func (s *sqlStore) ListFoodLike(ctx context.Context, paging *common.Paging) ([]f
 	db := s.db
 	var foodlikes []foodlikemodel.FoodLike
 
-	db = db.Table(foodlikemodel.FoodLike{}.TableName()).Where("status not in (0)")
+	db = db.Table(foodlikemodel.FoodLike{}.TableName())
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
@@ -25,10 +25,11 @@ func (s *sqlStore) ListFoodLike(ctx context.Context, paging *common.Paging) ([]f
 		db = db.Offset((paging.Page - 1) * paging.Limit)
 	}
 
-	// id desc
-	if err := db.Order("id asc").Find(&foodlikes).Error; err != nil {
+	if err := db.Find(&foodlikes).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
 	return foodlikes, nil
 }
+
+// TODO: list all users liked this food

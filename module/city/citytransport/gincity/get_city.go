@@ -2,6 +2,7 @@ package gincity
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,21 +14,19 @@ import (
 // GetCity a city
 func GetCity(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("city-id"))
+
+		cid, err := strconv.Atoi(c.Param("city-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-
 		db := appCtx.GetDBConnection()
 		store := citystorage.NewSQLStore(db)
 
 		bizCity := citybusiness.NewGetCityBiz(store)
-		city, err := bizCity.GetCity(c.Request.Context(), int(uid.GetLocalID()))
+		city, err := bizCity.GetCity(c.Request.Context(), cid)
 		if err != nil {
 			panic(err)
 		}
-
-		city.GenUID(common.DBTypeCity, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(city))
 	}

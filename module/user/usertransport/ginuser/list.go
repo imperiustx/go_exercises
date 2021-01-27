@@ -15,7 +15,7 @@ func ListUser(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var paging common.Paging
 
-		if err := c.ShouldBind(&paging); err != nil {
+		if err := c.ShouldBindJSON(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 		paging.Fulfill()

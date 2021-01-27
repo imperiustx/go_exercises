@@ -15,6 +15,7 @@ import (
 func CreateCity(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var city citymodel.CityCreate
+
 		if err := c.ShouldBindJSON(&city); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -22,13 +23,12 @@ func CreateCity(appCtx appctx.AppContext) func(c *gin.Context) {
 		// Create city
 		db := appCtx.GetDBConnection()
 		store := citystorage.NewSQLStore(db)
-
 		bizCity := citybusiness.NewCreateCityBiz(store)
 
 		if err := bizCity.CreateNewCity(c.Request.Context(), &city); err != nil {
 			panic(err)
 		}
-		city.GenUID(common.DBTypeCity, 3)
+		city.GenUID(common.DBTypeCity, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(city.FakeID))
 	}

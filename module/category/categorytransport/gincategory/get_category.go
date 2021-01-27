@@ -2,6 +2,7 @@ package gincategory
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,7 +14,8 @@ import (
 // GetCategory a category
 func GetCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		cid, err := common.FromBase58(c.Param("cat-id"))
+		idString := c.Param("cat-id")
+		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -22,12 +24,10 @@ func GetCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := categorystorage.NewSQLStore(db)
 
 		bizCategory := categorybusiness.NewGetCategoryBiz(store)
-		category, err := bizCategory.GetCategory(c.Request.Context(), int(cid.GetLocalID()))
+		category, err := bizCategory.GetCategory(c.Request.Context(), id)
 		if err != nil {
 			panic(err)
 		}
-
-		category.GenUID(common.DBTypeCategory, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(category))
 	}

@@ -2,6 +2,7 @@ package ginrestaurant
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,7 +14,8 @@ import (
 // GetRestaurant a restaurant
 func GetRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		rid, err := common.FromBase58(c.Param("res-id"))
+		idString := c.Param("res-id")
+		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -22,7 +24,7 @@ func GetRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := restaurantstorage.NewSQLStore(db)
 
 		bizRestaurant := restaurantbusiness.NewGetRestaurantBiz(store)
-		restaurant, err := bizRestaurant.GetRestaurant(c.Request.Context(), int(rid.GetLocalID()))
+		restaurant, err := bizRestaurant.GetRestaurant(c.Request.Context(), id)
 		if err != nil {
 			panic(err)
 		}

@@ -2,6 +2,7 @@ package ginfood
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,7 +14,8 @@ import (
 // GetFood a food
 func GetFood(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("food-id"))
+		idString := c.Param("food-id")
+		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -22,12 +24,10 @@ func GetFood(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := foodstorage.NewSQLStore(db)
 
 		bizFood := foodbusiness.NewGetFoodBiz(store)
-		food, err := bizFood.GetFood(c.Request.Context(), int(uid.GetLocalID()))
+		food, err := bizFood.GetFood(c.Request.Context(), id)
 		if err != nil {
 			panic(err)
 		}
-
-		food.GenUID(common.DBTypeFood, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(food))
 	}

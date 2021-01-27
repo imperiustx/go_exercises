@@ -2,6 +2,7 @@ package ginfoodrating
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,7 +14,8 @@ import (
 // GetFoodRating a foodrating
 func GetFoodRating(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("fr-id"))
+		idString := c.Param("fr-id")
+		id, err := strconv.Atoi(idString)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -22,12 +24,10 @@ func GetFoodRating(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := foodratingstorage.NewSQLStore(db)
 
 		bizFoodRating := foodratingbusiness.NewGetFoodRatingBiz(store)
-		foodrating, err := bizFoodRating.GetFoodRating(c.Request.Context(), int(uid.GetLocalID()))
+		foodrating, err := bizFoodRating.GetFoodRating(c.Request.Context(), id)
 		if err != nil {
 			panic(err)
 		}
-
-		foodrating.GenUID(common.DBTypeFoodRating, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(foodrating))
 	}
