@@ -16,7 +16,7 @@ type Restaurant struct {
 	Latitude    float64       `json:"latitude"`
 	Longitude   float64       `json:"longitude"`
 	Logo        *common.Image `json:"logo" gorm:"not null"`
-	ShippingFee int           `json:"shipping_fee" gorm:"not null;default: 0"`
+	ShippingFee int           `json:"shipping_fee" gorm:"not null"`
 }
 
 // TableName table name
