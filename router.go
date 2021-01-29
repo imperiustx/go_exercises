@@ -25,16 +25,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 
 	v1 := r.Group("v1")
 
+	v1.POST("/register", ginuser.Register(appCtx))
+	v1.POST("/login", ginuser.Login(appCtx))
+
 	users := v1.Group("/users")
 	{
-		users.POST("", ginuser.CreateUser(appCtx))
-		users.GET("", ginuser.ListUser(appCtx))
-		users.GET("/:user-id", ginuser.GetUser(appCtx))
-		users.PUT("/:user-id", ginuser.UpdateUser(appCtx))
-		users.DELETE("/:user-id", ginuser.DeleteUser(appCtx))
-		users.PUT("/:user-id/reactive", ginuser.ReactiveUser(appCtx))
-		users.POST("/register", ginuser.Register(appCtx))
-		users.POST("/login", ginuser.Login(appCtx))
+		users.GET("", ginuser.List(appCtx))
+		users.GET("/:user-id", ginuser.Get(appCtx))
+		users.PUT("/:user-id", ginuser.Update(appCtx))
+		users.DELETE("/:user-id", ginuser.Delete(appCtx))
 	}
 
 	restaurants := v1.Group("/restaurants")

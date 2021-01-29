@@ -7,11 +7,31 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 )
 
-func (s *sqlStore) ListUser(ctx context.Context, paging *common.Paging) ([]usermodel.User, error) {
+func (s *sqlStore) ListUser(
+	ctx context.Context,
+	filter *usermodel.Filter,
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]usermodel.User, error) {
 	db := s.db
 	var users []usermodel.User
 
 	db = db.Table(usermodel.User{}.TableName()).Where("status not in (0)")
+
+	if f := filter; f != nil {
+		if f.Email != "" {
+			db = db.Where("email = ?", f.Email)
+		}
+		if f.Phone != "" {
+			db = db.Where("phone = ?", f.Phone)
+		}
+		if f.FacebookID != "" {
+			db = db.Where("fb_id = ?", f.FacebookID)
+		}
+		if f.GoogleID != "" {
+			db = db.Where("gg_id = ?", f.GoogleID)
+		}
+	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
@@ -19,14 +39,26 @@ func (s *sqlStore) ListUser(ctx context.Context, paging *common.Paging) ([]userm
 
 	db = db.Limit(paging.Limit)
 
+	for _, k := range moreKeys {
+		db = db.Preload(k)
+	}
+
 	if paging.Cursor > 0 {
 		db = db.Where("id < ?", paging.Cursor)
 	} else {
 		db = db.Offset((paging.Page - 1) * paging.Limit)
 	}
 
-	// id desc
-	if err := db.Order("id asc").Find(&users).Error; err != nil {
+	if o := order; o != nil {
+		if o.Order == "asc" {
+			db = db.Order("id asc")
+		}
+		if o.Order == "desc" {
+			db = db.Order("id desc")
+		}
+	}
+
+	if err := db.Find(&users).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 

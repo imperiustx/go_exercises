@@ -11,8 +11,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
-// DeleteUser a user
-func DeleteUser(appCtx appctx.AppContext) func(c *gin.Context) {
+func Delete(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		idString := c.Param("user-id")
 		id, err := strconv.Atoi(idString)

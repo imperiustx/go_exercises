@@ -61,7 +61,7 @@ func (business *loginBusiness) Login(ctx context.Context, data *usermodel.UserLo
 		business.tkCfg.GetAtExp(),
 	)
 	if err != nil {
-		return nil, common.ErrInternal(err)
+		return nil, common.ErrCannotGenerateToken("access", err)
 	}
 
 	refreshToken, err := business.tokenProvider.Generate(
@@ -69,7 +69,7 @@ func (business *loginBusiness) Login(ctx context.Context, data *usermodel.UserLo
 		business.tkCfg.GetRtExp(),
 	)
 	if err != nil {
-		return nil, common.ErrInternal(err)
+		return nil, common.ErrCannotGenerateToken("refresh", err)
 	}
 
 	account := usermodel.NewAccount(accessToken, refreshToken)

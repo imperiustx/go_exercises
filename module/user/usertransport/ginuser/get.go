@@ -10,8 +10,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
-// GetUser a user
-func GetUser(appCtx appctx.AppContext) func(c *gin.Context) {
+func Get(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		uid, err := common.FromBase58(c.Param("user-id"))
 		if err != nil {
@@ -26,7 +25,6 @@ func GetUser(appCtx appctx.AppContext) func(c *gin.Context) {
 			c.Request.Context(),
 			map[string]interface{}{
 				"id": int(uid.GetLocalID()),
-				// "id": 2,
 			},
 		)
 		if err != nil {
