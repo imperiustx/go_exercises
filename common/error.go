@@ -64,3 +64,19 @@ func ErrCannotUpdateEntity(entity string, err error) *AppError {
 		fmt.Sprintf("ErrCannotUpdate%s", entity),
 	)
 }
+
+func ErrNoPermission(err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("You have no permission"),
+		fmt.Sprintf("ErrNoPermission"),
+	)
+}
+
+func ErrCannotGenerateToken(tokenType string, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Cannot generate %s token", tokenType),
+		fmt.Sprintf("ErrCannotGenerateToken"),
+	)
+}

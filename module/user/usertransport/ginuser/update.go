@@ -12,8 +12,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
-// UpdateUser a user
-func UpdateUser(appCtx appctx.AppContext) func(c *gin.Context) {
+func Update(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var user usermodel.UserUpdate
 

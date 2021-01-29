@@ -9,7 +9,12 @@ import (
 
 // ListUserStorage list
 type ListUserStorage interface {
-	ListUser(ctx context.Context, paging *common.Paging) ([]usermodel.User, error)
+	ListUser(
+		ctx context.Context,
+		filter *usermodel.Filter,
+		paging *common.Paging,
+		order *common.OrderSort,
+		moreKeys ...string) ([]usermodel.User, error)
 }
 
 type listUser struct {
@@ -21,8 +26,12 @@ func NewListUserBiz(store ListUserStorage) *listUser {
 	return &listUser{store: store}
 }
 
-func (biz *listUser) ListAllUser(ctx context.Context, paging *common.Paging) ([]usermodel.User, error) {
-	data, err := biz.store.ListUser(ctx, paging)
+func (biz *listUser) ListAllUser(
+	ctx context.Context,
+	filter *usermodel.Filter,
+	paging *common.Paging,
+	order *common.OrderSort) ([]usermodel.User, error) {
+	data, err := biz.store.ListUser(ctx, filter, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(usermodel.EntityName, err)
 	}
