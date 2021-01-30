@@ -17,8 +17,7 @@ func DeleteRestaurantRating(appCtx appctx.AppContext) func(c *gin.Context) {
 		idString := c.Param("res-id")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err)
 		}
 
 		db := appCtx.GetDBConnection()

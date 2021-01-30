@@ -42,7 +42,7 @@ func (business *loginBusiness) Login(ctx context.Context, data *usermodel.UserLo
 		map[string]interface{}{"email": data.Email},
 	)
 	if err != nil {
-		return nil, common.ErrCannotGetEntity(usermodel.EntityName, err)
+		return nil, common.ErrCannotSignInByEmail(data.Email, err)
 	}
 
 	passHashed := business.hasher.Hash(data.Password + user.Salt)

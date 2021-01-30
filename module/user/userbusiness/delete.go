@@ -15,12 +15,16 @@ type DeleteUserStorage interface {
 }
 
 type deleteUser struct {
-	store DeleteUserStorage
+	store     DeleteUserStorage
+	requester common.Requester
 }
 
 // NewDeleteUserBiz delete
-func NewDeleteUserBiz(store DeleteUserStorage) *deleteUser {
-	return &deleteUser{store: store}
+func NewDeleteUserBiz(store DeleteUserStorage, requester common.Requester) *deleteUser {
+	return &deleteUser{
+		store:     store,
+		requester: requester,
+	}
 }
 
 func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) error {
@@ -33,8 +37,15 @@ func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]int
 		return common.ErrCannotGetEntity(usermodel.EntityName, errors.New("user not found"))
 	}
 
+	isAuthor := biz.requester.GetUserId() == user.ID
+	isAdmin := biz.requester.GetRole() == "admin" 
+
+	if !isAuthor && !isAdmin {
+		return common.ErrNoPermission(nil)
+	}
+
 	if err := biz.store.DeleteUser(conditions); err != nil {
-		return err
+		return common.ErrCannotDeleteEntity(usermodel.EntityName, err)
 	}
 
 	return nil

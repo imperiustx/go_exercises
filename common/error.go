@@ -80,3 +80,11 @@ func ErrCannotGenerateToken(tokenType string, err error) *AppError {
 		fmt.Sprintf("ErrCannotGenerateToken"),
 	)
 }
+
+func ErrCannotSignInByEmail(email string, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Cannot sign %s in, check your email again", email),
+		fmt.Sprintf("ErrCannotSignInByEmail"),
+	)
+}
