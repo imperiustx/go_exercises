@@ -28,10 +28,10 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	v1.POST("/register", ginuser.Register(appCtx))
 	v1.POST("/login", ginuser.Login(appCtx))
 
-	users := v1.Group("/users")
+	users := v1.Group("/users", middleware.RequiredAuth(appCtx))
 	{
 		users.GET("", ginuser.List(appCtx))
-		users.GET("/:user-id", ginuser.Get(appCtx))
+		users.GET("/:user-id", ginuser.GetProfile(appCtx))
 		users.PUT("/:user-id", ginuser.Update(appCtx))
 		users.DELETE("/:user-id", ginuser.Delete(appCtx))
 	}

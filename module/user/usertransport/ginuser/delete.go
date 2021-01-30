@@ -21,9 +21,13 @@ func Delete(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
-		bizUser := userbusiness.NewDeleteUserBiz(store)
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+		bizUser := userbusiness.NewDeleteUserBiz(store, requester)
 
-		if err := bizUser.DeleteUser(c.Request.Context(), map[string]interface{}{"id": id}); err != nil {
+		if err := bizUser.DeleteUser(
+			c.Request.Context(),
+			map[string]interface{}{"id": id},
+		); err != nil {
 			panic(err)
 		}
 

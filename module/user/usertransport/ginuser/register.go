@@ -18,8 +18,7 @@ func Register(appCtx appctx.AppContext) func(*gin.Context) {
 		var data usermodel.UserCreate
 
 		if err := c.ShouldBind(&data); err != nil {
-			c.JSON(http.StatusBadRequest, common.ErrInvalidRequest(err))
-			return
+			panic(err)
 		}
 
 		store := userstorage.NewSQLStore(db)
@@ -27,8 +26,7 @@ func Register(appCtx appctx.AppContext) func(*gin.Context) {
 		repo := userbusiness.NewRegisterBusiness(store, md5)
 
 		if err := repo.Register(c.Request.Context(), &data); err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(data.ID))

@@ -18,12 +18,16 @@ type ListUserStorage interface {
 }
 
 type listUser struct {
-	store ListUserStorage
+	store     ListUserStorage
+	requester common.Requester
 }
 
 // NewListUserBiz list
-func NewListUserBiz(store ListUserStorage) *listUser {
-	return &listUser{store: store}
+func NewListUserBiz(store ListUserStorage, requester common.Requester) *listUser {
+	return &listUser{
+		store:     store,
+		requester: requester,
+	}
 }
 
 func (biz *listUser) ListAllUser(
@@ -31,6 +35,11 @@ func (biz *listUser) ListAllUser(
 	filter *usermodel.Filter,
 	paging *common.Paging,
 	order *common.OrderSort) ([]usermodel.User, error) {
+
+	if biz.requester.GetRole() != "admin" {
+		return []usermodel.User{}, common.ErrNoPermission(nil)
+	}
+
 	data, err := biz.store.ListUser(ctx, filter, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(usermodel.EntityName, err)

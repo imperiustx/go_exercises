@@ -19,8 +19,7 @@ func Login(appCtx appctx.AppContext) func(*gin.Context) {
 		var loginUserData usermodel.UserLogin
 
 		if err := c.ShouldBind(&loginUserData); err != nil {
-			c.JSON(http.StatusBadRequest, common.ErrInvalidRequest(err))
-			return
+			panic(err)
 		}
 
 		db := appCtx.GetDBConnection()
@@ -40,8 +39,7 @@ func Login(appCtx appctx.AppContext) func(*gin.Context) {
 			&loginUserData,
 		)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, common.ErrInvalidRequest(err))
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(account))

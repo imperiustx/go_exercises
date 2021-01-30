@@ -20,11 +20,9 @@ func List(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err := c.ShouldBindJSON(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-
 		if err := c.ShouldBind(&filter); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-
 		if err := c.ShouldBind(&order); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -33,8 +31,9 @@ func List(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+		bizUser := userbusiness.NewListUserBiz(store, requester)
 
-		bizUser := userbusiness.NewListUserBiz(store)
 		users, err := bizUser.ListAllUser(c.Request.Context(), &filter, &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
