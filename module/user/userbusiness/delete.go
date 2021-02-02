@@ -38,7 +38,7 @@ func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]int
 	}
 
 	isAuthor := biz.requester.GetUserId() == user.ID
-	isAdmin := biz.requester.GetRole() == "admin" 
+	isAdmin := biz.requester.GetRole() == "admin"
 
 	if !isAuthor && !isAdmin {
 		return common.ErrNoPermission(nil)

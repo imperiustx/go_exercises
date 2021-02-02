@@ -11,11 +11,11 @@ const EntityName = "User"
 // User model
 type User struct {
 	common.SQLModel
-	Email      string `json:"email" gorm:"not null"`
-	FacebookID string `json:"fb_id"`
-	GoogleID   string `json:"gg_id"`
-	Password   string `json:"password" gorm:"not null"`
-	Salt       string
+	Email      string        `json:"email" gorm:"not null"`
+	FacebookID string        `json:"fb_id"`
+	GoogleID   string        `json:"gg_id"`
+	Password   string        `json:"password" gorm:"not null"`
+	Salt       string        `json:"-"`
 	FirstName  string        `json:"first_name" gorm:"not null"`
 	LastName   string        `json:"last_name" gorm:"not null"`
 	Phone      string        `json:"phone"`

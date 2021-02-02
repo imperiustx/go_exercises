@@ -1,10 +1,11 @@
 package userstorage
 
-func (s *sqlStore) DeleteUser(conditions map[string]interface{}) error {
-	db := s.db
+import "github.com/imperiustx/go_excercises/module/user/usermodel"
 
-	if err := db.Table("users").
-		Where("id = ?", conditions["id"]).
+func (s *sqlStore) DeleteUser(conditions map[string]interface{}) error {
+	db := s.db.Table(usermodel.User{}.TableName())
+
+	if err := db.Where("id = ?", conditions["id"]).
 		Update("status", 0).Error; err != nil {
 		return err
 	}
