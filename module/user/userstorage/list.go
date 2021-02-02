@@ -25,12 +25,6 @@ func (s *sqlStore) ListUser(
 		if f.Phone != "" {
 			db = db.Where("phone = ?", f.Phone)
 		}
-		if f.FacebookID != "" {
-			db = db.Where("fb_id = ?", f.FacebookID)
-		}
-		if f.GoogleID != "" {
-			db = db.Where("gg_id = ?", f.GoogleID)
-		}
 	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {

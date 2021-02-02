@@ -37,10 +37,7 @@ func NewLoginBusiness(storeUser LoginStorage, tokenProvider tokenprovider.Provid
 }
 
 func (business *loginBusiness) Login(ctx context.Context, data *usermodel.UserLogin) (*usermodel.Account, error) {
-	user, err := business.storeUser.FindUser(
-		ctx,
-		map[string]interface{}{"email": data.Email},
-	)
+	user, err := business.storeUser.FindUser(ctx, map[string]interface{}{"email": data.Email})
 	if err != nil {
 		return nil, common.ErrCannotSignInByEmail(data.Email, err)
 	}

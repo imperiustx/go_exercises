@@ -23,9 +23,7 @@ func GetProfile(appCtx appctx.AppContext) func(c *gin.Context) {
 		
 		user, err := bizUser.GetUser(
 			c.Request.Context(),
-			map[string]interface{}{
-				"id": int(uid.GetLocalID()),
-			},
+			map[string]interface{}{"id": int(uid.GetLocalID())},
 		)
 		if err != nil {
 			panic(err)

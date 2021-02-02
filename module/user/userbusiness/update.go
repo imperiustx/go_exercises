@@ -11,8 +11,8 @@ import (
 // UpdateUserStorage update
 type UpdateUserStorage interface {
 	FindUser(
-		ctx context.Context, 
-		conditions map[string]interface{}, 
+		ctx context.Context,
+		conditions map[string]interface{},
 		moreInfo ...string) (*usermodel.User, error)
 	UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error
 }

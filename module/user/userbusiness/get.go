@@ -7,11 +7,10 @@ import (
 	"github.com/imperiustx/go_excercises/module/user/usermodel"
 )
 
-// GetUserStorage get
 type GetUserStorage interface {
 	FindUser(
-		ctx context.Context, 
-		conditions map[string]interface{}, 
+		ctx context.Context,
+		conditions map[string]interface{},
 		moreInfo ...string) (*usermodel.User, error)
 }
 
@@ -19,16 +18,15 @@ type getUserBiz struct {
 	store GetUserStorage
 }
 
-// NewGetUserBiz get
 func NewGetUserBiz(store GetUserStorage) *getUserBiz {
 	return &getUserBiz{store: store}
 }
 
 func (biz *getUserBiz) GetUser(
-	ctx context.Context, 
-	conditions map[string]interface{}, 
+	ctx context.Context,
+	conditions map[string]interface{},
 	moreInfo ...string) (*usermodel.User, error) {
-		
+
 	user, err := biz.store.FindUser(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(usermodel.EntityName, err)

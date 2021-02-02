@@ -69,7 +69,7 @@ func ErrNoPermission(err error) *AppError {
 	return NewCustomError(
 		err,
 		fmt.Sprintf("You have no permission"),
-		fmt.Sprintf("ErrNoPermission"),
+		"ErrNoPermission",
 	)
 }
 
@@ -77,7 +77,7 @@ func ErrCannotGenerateToken(tokenType string, err error) *AppError {
 	return NewCustomError(
 		err,
 		fmt.Sprintf("Cannot generate %s token", tokenType),
-		fmt.Sprintf("ErrCannotGenerateToken"),
+		"ErrCannotGenerateToken",
 	)
 }
 
@@ -85,6 +85,6 @@ func ErrCannotSignInByEmail(email string, err error) *AppError {
 	return NewCustomError(
 		err,
 		fmt.Sprintf("Cannot sign %s in, check your email again", email),
-		fmt.Sprintf("ErrCannotSignInByEmail"),
+		"ErrCannotSignInByEmail",
 	)
 }
