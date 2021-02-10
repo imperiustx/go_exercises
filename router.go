@@ -5,6 +5,7 @@ import (
 	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/middleware"
 	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
+	"github.com/imperiustx/go_excercises/module/cart/carttransport/gincart"
 	"github.com/imperiustx/go_excercises/module/category/categorytransport/gincategory"
 	"github.com/imperiustx/go_excercises/module/categoryrestaurant/catrestransport/gincategoryrestaurant"
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
@@ -147,6 +148,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		images.POST("", ginimage.CreateImage(appCtx))
 		images.GET("/:usr-id", ginimage.GetImage(appCtx))
 		images.DELETE("/:usr-id", ginimage.DeleteImage(appCtx))
+	}
+
+	carts := v1.Group("/carts")
+	{
+		carts.POST("", gincart.Create(appCtx))
+		carts.GET("", gincart.List(appCtx))
+		carts.GET("/:u-id/:f-id", gincart.GetProfile(appCtx))
+		carts.PUT("/:u-id/:f-id", gincart.Update(appCtx))
+		carts.DELETE("/:u-id/:f-id", gincart.Delete(appCtx))
 	}
 }
 

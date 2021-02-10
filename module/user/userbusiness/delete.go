@@ -10,7 +10,9 @@ import (
 
 // DeleteUserStorage delete
 type DeleteUserStorage interface {
-	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) (*usermodel.User, error)
+	FindUser(ctx context.Context, 
+		conditions map[string]interface{}, 
+		moreInfo ...string) (*usermodel.User, error)
 	DeleteUser(conditions map[string]interface{}) error
 }
 
