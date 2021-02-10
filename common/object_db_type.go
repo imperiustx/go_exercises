@@ -10,5 +10,6 @@ const (
 	DBTypeOrder
 	DBTypeFoodRating
 	DBTypeOrderDetail
+	DBTypeOrderTracking
 	DBTypeRestaurantRating
 )

@@ -15,6 +15,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/image/imagetransport/ginimage"
 	"github.com/imperiustx/go_excercises/module/order/ordertransport/ginorder"
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
+	"github.com/imperiustx/go_excercises/module/ordertracking/ordertrackingtransport/ginordertracking"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
@@ -129,9 +130,18 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		orderdetails.POST("", ginorderdetail.CreateOrderDetail(appCtx))
 		orderdetails.GET("", ginorderdetail.ListOrderDetail(appCtx))
-		orderdetails.GET("/:ord-id", ginorderdetail.GetOrderDetail(appCtx))
-		orderdetails.PUT("/:ord-id", ginorderdetail.UpdateOrderDetail(appCtx))
-		orderdetails.DELETE("/:ord-id", ginorderdetail.DeleteOrderDetail(appCtx))
+		orderdetails.GET("/:od-id", ginorderdetail.GetOrderDetail(appCtx))
+		orderdetails.PUT("/:od-id", ginorderdetail.UpdateOrderDetail(appCtx))
+		orderdetails.DELETE("/:od-id", ginorderdetail.DeleteOrderDetail(appCtx))
+	}
+
+	ordertrackings := v1.Group("/order-trackings")
+	{
+		ordertrackings.POST("", ginordertracking.CreateOrderTracking(appCtx))
+		ordertrackings.GET("", ginordertracking.ListOrderTracking(appCtx))
+		ordertrackings.GET("/:ot-id", ginordertracking.GetOrderTracking(appCtx))
+		ordertrackings.PUT("/:ot-id", ginordertracking.UpdateOrderTracking(appCtx))
+		ordertrackings.DELETE("/:ot-id", ginordertracking.DeleteOrderTracking(appCtx))
 	}
 
 	categoryrestaurants := v1.Group("/cat-res")
