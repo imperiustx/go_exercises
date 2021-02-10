@@ -10,7 +10,10 @@ import (
 
 // DeleteOrderStorage delete
 type DeleteOrderStorage interface {
-	FindOrder(ctx context.Context, id int) (*ordermodel.Order, error)
+	FindOrder(
+		ctx context.Context,
+		id int,
+		moreInfo ...string) (*ordermodel.Order, error)
 	DeleteOrder(id int) error
 }
 
@@ -30,7 +33,10 @@ func (biz *deleteOrder) DeleteOrder(ctx context.Context, id int) error {
 	}
 
 	if order.Status == 0 {
-		return common.ErrCannotGetEntity(ordermodel.EntityName, errors.New("order not found"))
+		return common.ErrCannotGetEntity(
+			ordermodel.EntityName,
+			errors.New("order not found"),
+		)
 	}
 
 	if err := biz.store.DeleteOrder(id); err != nil {

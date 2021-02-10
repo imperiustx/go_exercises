@@ -120,9 +120,9 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		orders.POST("", ginorder.CreateOrder(appCtx))
 		orders.GET("", ginorder.ListOrder(appCtx))
-		orders.GET("/:ord-id", ginorder.GetOrder(appCtx))
-		orders.PUT("/:ord-id", ginorder.UpdateOrder(appCtx))
-		orders.DELETE("/:ord-id", ginorder.DeleteOrder(appCtx))
+		orders.GET("/:order-id", ginorder.GetOrder(appCtx))
+		orders.PUT("/:order-id", ginorder.UpdateOrder(appCtx))
+		orders.DELETE("/:order-id", ginorder.DeleteOrder(appCtx))
 	}
 
 	orderdetails := v1.Group("/order-details")

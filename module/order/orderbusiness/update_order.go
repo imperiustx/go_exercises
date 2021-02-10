@@ -10,7 +10,10 @@ import (
 
 // UpdateOrderStorage update
 type UpdateOrderStorage interface {
-	FindOrder(ctx context.Context, id int) (*ordermodel.Order, error)
+	FindOrder(
+		ctx context.Context, 
+		id int,
+		moreInfo ...string) (*ordermodel.Order, error)
 	UpdateOrder(ctx context.Context, id int, data *ordermodel.OrderUpdate) error
 }
 

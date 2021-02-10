@@ -1,10 +1,11 @@
 package orderstorage
 
-func (s *sqlStore) DeleteOrder(id int) error {
-	db := s.db
+import "github.com/imperiustx/go_excercises/module/order/ordermodel"
 
-	if err := db.Table("orders").
-		Where("id = ?", id).
+func (s *sqlStore) DeleteOrder(id int) error {
+	db := s.db.Table(ordermodel.Order{}.TableName())
+
+	if err := db.Where("id = ?", id).
 		Update("status", 0).Error; err != nil {
 		return err
 	}

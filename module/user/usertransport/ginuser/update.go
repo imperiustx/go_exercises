@@ -2,7 +2,6 @@ package ginuser
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -21,8 +20,7 @@ func Update(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		idString := c.Param("user-id")
-		id, err := strconv.Atoi(idString)
+		uid, err := common.FromBase58(c.Param("user-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -31,7 +29,7 @@ func Update(appCtx appctx.AppContext) func(c *gin.Context) {
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		bizUser := userbusiness.NewUpdateUserBiz(store, requester)
 
-		if err := bizUser.UpdateUser(c.Request.Context(), id, &user); err != nil {
+		if err := bizUser.UpdateUser(c.Request.Context(), int(uid.GetLocalID()), &user); err != nil {
 			panic(err)
 		}
 

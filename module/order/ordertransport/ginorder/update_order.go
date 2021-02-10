@@ -2,7 +2,6 @@ package ginorder
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -22,8 +21,7 @@ func UpdateOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		idString := c.Param("ord-id")
-		id, err := strconv.Atoi(idString)
+		oid, err := common.FromBase58(c.Param("order-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -31,7 +29,7 @@ func UpdateOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := orderstorage.NewSQLStore(db)
 		bizOrder := orderbusiness.NewUpdateOrderBiz(store)
 
-		if err := bizOrder.UpdateOrder(c.Request.Context(), id, &order); err != nil {
+		if err := bizOrder.UpdateOrder(c.Request.Context(), int(oid.GetLocalID()), &order); err != nil {
 			panic(err)
 		}
 

@@ -6,6 +6,7 @@ type OrderCreate struct {
 	common.SQLModelCreate `json:",inline"`
 	UserID                int     `json:"user_id" gorm:"not null"`
 	TotalPrice            float64 `json:"total_price" gorm:"not null"`
+	ShipperID             int     `json:"shipper_id" gorm:"not null"`
 }
 
 func (OrderCreate) TableName() string {

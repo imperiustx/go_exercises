@@ -2,7 +2,6 @@ package ginorder
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -14,8 +13,7 @@ import (
 // DeleteOrder a order
 func DeleteOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		idString := c.Param("ord-id")
-		id, err := strconv.Atoi(idString)
+		oid, err := common.FromBase58(c.Param("order-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -24,7 +22,7 @@ func DeleteOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := orderstorage.NewSQLStore(db)
 		bizOrder := orderbusiness.NewDeleteOrderBiz(store)
 
-		if err := bizOrder.DeleteOrder(c.Request.Context(), id); err != nil {
+		if err := bizOrder.DeleteOrder(c.Request.Context(), int(oid.GetLocalID())); err != nil {
 			panic(err)
 		}
 

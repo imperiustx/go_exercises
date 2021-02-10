@@ -13,18 +13,23 @@ import (
 // ListOrder a order
 func ListOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var paging common.Paging
-
+		var (
+			paging common.Paging
+			order  common.OrderSort
+		)
 		if err := c.ShouldBind(&paging); err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+		if err := c.ShouldBind(&order); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 		paging.Fulfill()
 
 		db := appCtx.GetDBConnection()
 		store := orderstorage.NewSQLStore(db)
-
+		// requester := c.MustGet(common.CurrentUser).(common.Requester)
 		bizOrder := orderbusiness.NewListOrderBiz(store)
-		orders, err := bizOrder.ListAllOrder(c.Request.Context(), &paging)
+		orders, err := bizOrder.ListAllOrder(c.Request.Context(), &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
