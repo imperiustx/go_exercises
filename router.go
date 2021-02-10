@@ -5,6 +5,7 @@ import (
 	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/middleware"
 	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
+	"github.com/imperiustx/go_excercises/module/cart/carttransport/gincart"
 	"github.com/imperiustx/go_excercises/module/category/categorytransport/gincategory"
 	"github.com/imperiustx/go_excercises/module/categoryrestaurant/catrestransport/gincategoryrestaurant"
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
@@ -14,6 +15,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/image/imagetransport/ginimage"
 	"github.com/imperiustx/go_excercises/module/order/ordertransport/ginorder"
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
+	"github.com/imperiustx/go_excercises/module/ordertracking/ordertrackingtransport/ginordertracking"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
@@ -119,18 +121,27 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		orders.POST("", ginorder.CreateOrder(appCtx))
 		orders.GET("", ginorder.ListOrder(appCtx))
-		orders.GET("/:ord-id", ginorder.GetOrder(appCtx))
-		orders.PUT("/:ord-id", ginorder.UpdateOrder(appCtx))
-		orders.DELETE("/:ord-id", ginorder.DeleteOrder(appCtx))
+		orders.GET("/:order-id", ginorder.GetOrder(appCtx))
+		orders.PUT("/:order-id", ginorder.UpdateOrder(appCtx))
+		orders.DELETE("/:order-id", ginorder.DeleteOrder(appCtx))
 	}
 
 	orderdetails := v1.Group("/order-details")
 	{
 		orderdetails.POST("", ginorderdetail.CreateOrderDetail(appCtx))
 		orderdetails.GET("", ginorderdetail.ListOrderDetail(appCtx))
-		orderdetails.GET("/:ord-id", ginorderdetail.GetOrderDetail(appCtx))
-		orderdetails.PUT("/:ord-id", ginorderdetail.UpdateOrderDetail(appCtx))
-		orderdetails.DELETE("/:ord-id", ginorderdetail.DeleteOrderDetail(appCtx))
+		orderdetails.GET("/:od-id", ginorderdetail.GetOrderDetail(appCtx))
+		orderdetails.PUT("/:od-id", ginorderdetail.UpdateOrderDetail(appCtx))
+		orderdetails.DELETE("/:od-id", ginorderdetail.DeleteOrderDetail(appCtx))
+	}
+
+	ordertrackings := v1.Group("/order-trackings")
+	{
+		ordertrackings.POST("", ginordertracking.CreateOrderTracking(appCtx))
+		ordertrackings.GET("", ginordertracking.ListOrderTracking(appCtx))
+		ordertrackings.GET("/:ot-id", ginordertracking.GetOrderTracking(appCtx))
+		ordertrackings.PUT("/:ot-id", ginordertracking.UpdateOrderTracking(appCtx))
+		ordertrackings.DELETE("/:ot-id", ginordertracking.DeleteOrderTracking(appCtx))
 	}
 
 	categoryrestaurants := v1.Group("/cat-res")
@@ -147,6 +158,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		images.POST("", ginimage.CreateImage(appCtx))
 		images.GET("/:usr-id", ginimage.GetImage(appCtx))
 		images.DELETE("/:usr-id", ginimage.DeleteImage(appCtx))
+	}
+
+	carts := v1.Group("/carts")
+	{
+		carts.POST("", gincart.Create(appCtx))
+		carts.GET("", gincart.List(appCtx))
+		carts.GET("/:u-id/:f-id", gincart.GetProfile(appCtx))
+		carts.PUT("/:u-id/:f-id", gincart.Update(appCtx))
+		carts.DELETE("/:u-id/:f-id", gincart.Delete(appCtx))
 	}
 }
 

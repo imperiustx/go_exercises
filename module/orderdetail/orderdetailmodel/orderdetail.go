@@ -10,7 +10,7 @@ const EntityName = "OrderDetail"
 type OrderDetail struct {
 	common.SQLModel
 	OrderID    int     `json:"order_id" gorm:"not null"`
-	FoodOrigin string  `json:"food_orgin"`
+	FoodOrigin string  `json:"food_orgin"` //FIXME: fix food_orgin data type
 	Price      float64 `json:"price" gorm:"not null"`
 	Quantity   int     `json:"quantity" gorm:"not null"`
 	Discount   float64 `json:"discount" gorm:"not null"`

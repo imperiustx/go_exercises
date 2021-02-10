@@ -13,7 +13,7 @@ import (
 // GetOrder a order
 func GetOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("ord-id"))
+		uid, err := common.FromBase58(c.Param("order-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

@@ -1,7 +1,7 @@
 package ordermodel
 
 type OrderUpdate struct {
-	TotalPrice float64 `json:"total_price" gorm:"not null"`
+	TotalPrice float64 `json:"total_price"`
 }
 
 func (OrderUpdate) TableName() string {

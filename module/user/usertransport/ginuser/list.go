@@ -13,10 +13,11 @@ import (
 
 func List(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var paging common.Paging
-		var filter usermodel.Filter
-		var order common.OrderSort
-
+		var (
+			paging common.Paging
+			filter usermodel.Filter
+			order  common.OrderSort
+		)
 		if err := c.ShouldBindJSON(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

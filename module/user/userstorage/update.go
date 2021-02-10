@@ -8,11 +8,9 @@ import (
 )
 
 func (s *sqlStore) UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error {
-	db := s.db
+	db := s.db.Table(data.TableName())
 
-	if err := db.Table(data.TableName()).
-		Where("id = ?", id).
-		Updates(data).Error; err != nil {
+	if err := db.Where("id = ?", id).Updates(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

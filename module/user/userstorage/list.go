@@ -13,10 +13,10 @@ func (s *sqlStore) ListUser(
 	paging *common.Paging,
 	order *common.OrderSort,
 	moreKeys ...string) ([]usermodel.User, error) {
-	db := s.db
+	db := s.db.Table(usermodel.User{}.TableName())
 	var users []usermodel.User
 
-	db = db.Table(usermodel.User{}.TableName()).Where("status not in (0)")
+	db = db.Where("status not in (0)")
 
 	if f := filter; f != nil {
 		if f.Email != "" {
