@@ -4,8 +4,8 @@ import "github.com/imperiustx/go_excercises/common"
 
 type OrderTrackingCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	OrderID               int    `json:"order_id" gorm:"not null"`
-	State                 string `json:"state" gorm:"not null"`
+	OrderID               int    `json:"order_id" `
+	State                 string `json:"state" `
 }
 
 func (OrderTrackingCreate) TableName() string {

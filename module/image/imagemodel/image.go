@@ -5,9 +5,9 @@ const EntityName = "Image"
 // Image model
 type Image struct {
 	ID     int    `json:"id" gorm:"primaryKey;not null"`
-	URL    string `json:"url" gorm:"not null"`
-	Width  int    `json:"width" gorm:"not null"`
-	Height int    `json:"height" gorm:"not null"`
+	URL    string `json:"url" `
+	Width  int    `json:"width" `
+	Height int    `json:"height" `
 }
 
 // TableName table name

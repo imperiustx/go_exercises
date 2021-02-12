@@ -1,9 +1,9 @@
 package imagemodel
 
 type ImageCreate struct {
-	URL    string `json:"url" gorm:"not null"`
-	Width  int    `json:"width" gorm:"not null"`
-	Height int    `json:"height" gorm:"not null"`
+	URL    string `json:"url" `
+	Width  int    `json:"width" `
+	Height int    `json:"height" `
 }
 
 func (ImageCreate) TableName() string {

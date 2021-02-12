@@ -4,9 +4,9 @@ import "github.com/imperiustx/go_excercises/common"
 
 type OrderCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	UserID                int     `json:"user_id" gorm:"not null"`
-	TotalPrice            float64 `json:"total_price" gorm:"not null"`
-	ShipperID             int     `json:"shipper_id" gorm:"not null"`
+	UserID                int     `json:"user_id" `
+	TotalPrice            float64 `json:"total_price" `
+	ShipperID             int     `json:"shipper_id" `
 }
 
 func (OrderCreate) TableName() string {

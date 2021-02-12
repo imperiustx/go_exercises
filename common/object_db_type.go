@@ -4,7 +4,7 @@ const (
 	DBTypeUser = iota
 	DBTypeRestaurant
 	DBTypeCity
-	DBTypeAddress
+	DBTypeUserAddress
 	DBTypeFood
 	DBTypeCategory
 	DBTypeOrder

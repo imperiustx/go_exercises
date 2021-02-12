@@ -14,7 +14,10 @@ type UpdateUserStorage interface {
 		ctx context.Context,
 		conditions map[string]interface{},
 		moreInfo ...string) (*usermodel.User, error)
-	UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error
+	UpdateUser(
+		ctx context.Context,
+		conditions map[string]interface{},
+		data *usermodel.UserUpdate) error
 }
 
 type updateUser struct {
@@ -30,8 +33,11 @@ func NewUpdateUserBiz(store UpdateUserStorage, requester common.Requester) *upda
 	}
 }
 
-func (biz *updateUser) UpdateUser(ctx context.Context, id int, data *usermodel.UserUpdate) error {
-	user, err := biz.store.FindUser(ctx, map[string]interface{}{"id": id})
+func (biz *updateUser) UpdateUser(
+	ctx context.Context,
+	conditions map[string]interface{},
+	data *usermodel.UserUpdate) error {
+	user, err := biz.store.FindUser(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(usermodel.EntityName, err)
 	}
@@ -44,7 +50,7 @@ func (biz *updateUser) UpdateUser(ctx context.Context, id int, data *usermodel.U
 		return common.ErrNoPermission(nil)
 	}
 
-	if err := biz.store.UpdateUser(ctx, user.ID, data); err != nil {
+	if err := biz.store.UpdateUser(ctx, conditions, data); err != nil {
 		return common.ErrCannotUpdateEntity(usermodel.EntityName, err)
 	}
 

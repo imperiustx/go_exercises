@@ -4,11 +4,11 @@ import "github.com/imperiustx/go_excercises/common"
 
 type OrderDetailCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	OrderID               int     `json:"order_id" gorm:"not null"`
+	OrderID               int     `json:"order_id" `
 	FoodOrigin            string  `json:"food_orgin"`
-	Price                 float64 `json:"price" gorm:"not null"`
-	Quantity              int     `json:"quantity" gorm:"not null"`
-	Discount              float64 `json:"discount" gorm:"not null"`
+	Price                 float64 `json:"price" `
+	Quantity              int     `json:"quantity" `
+	Discount              float64 `json:"discount" `
 }
 
 func (OrderDetailCreate) TableName() string {

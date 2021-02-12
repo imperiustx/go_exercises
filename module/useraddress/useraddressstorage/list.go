@@ -1,30 +1,30 @@
-package userstorage
+package useraddressstorage
 
 import (
 	"context"
 
 	"github.com/imperiustx/go_excercises/common"
-	"github.com/imperiustx/go_excercises/module/user/usermodel"
+	"github.com/imperiustx/go_excercises/module/useraddress/useraddressmodel"
 )
 
-func (s *sqlStore) ListUser(
+func (s *sqlStore) ListUserAddress(
 	ctx context.Context,
-	filter *usermodel.Filter,
+	filter *useraddressmodel.Filter,
 	paging *common.Paging,
 	order *common.OrderSort,
-	moreKeys ...string) ([]usermodel.User, error) {
-		
-	db := s.db.Table(usermodel.User{}.TableName())
-	var users []usermodel.User
+	moreKeys ...string) ([]useraddressmodel.UserAddress, error) {
+
+	db := s.db.Table(useraddressmodel.UserAddress{}.TableName())
+	var useraddresses []useraddressmodel.UserAddress
 
 	db = db.Where("status not in (0)")
 
 	if f := filter; f != nil {
-		if f.Email != "" {
-			db = db.Where("email = ?", f.Email)
+		if f.CityID != 0 {
+			db = db.Where("city_id = ?", f.CityID)
 		}
-		if f.Phone != "" {
-			db = db.Where("phone = ?", f.Phone)
+		if f.UserID != 0 {
+			db = db.Where("user_id = ?", f.UserID)
 		}
 	}
 
@@ -33,10 +33,6 @@ func (s *sqlStore) ListUser(
 	}
 
 	db = db.Limit(paging.Limit)
-
-	for _, k := range moreKeys {
-		db = db.Preload(k)
-	}
 
 	if paging.Cursor > 0 {
 		db = db.Where("id < ?", paging.Cursor)
@@ -53,9 +49,9 @@ func (s *sqlStore) ListUser(
 		}
 	}
 
-	if err := db.Find(&users).Error; err != nil {
+	if err := db.Find(&useraddresses).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
-	return users, nil
+	return useraddresses, nil
 }

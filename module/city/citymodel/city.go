@@ -9,7 +9,7 @@ const EntityName = "City"
 // City model
 type City struct {
 	common.SQLModel
-	Title string `json:"title" gorm:"not null"`
+	Title string `json:"title" `
 }
 
 // TableName table name

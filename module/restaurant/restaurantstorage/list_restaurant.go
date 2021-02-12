@@ -13,6 +13,7 @@ func (s *sqlStore) ListRestaurant(
 	paging *common.Paging,
 	order *common.OrderSort,
 	moreKeys ...string) ([]restaurantmodel.Restaurant, error) {
+		
 	db := s.db.Table(restaurantmodel.Restaurant{}.TableName())
 	var restaurants []restaurantmodel.Restaurant
 

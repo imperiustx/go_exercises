@@ -1,7 +1,7 @@
 package ordertrackingmodel
 
 type OrderTrackingUpdate struct {
-	State string `json:"state" gorm:"not null"`
+	State string `json:"state" `
 }
 
 func (OrderTrackingUpdate) TableName() string {

@@ -1,4 +1,4 @@
-package addressstorage
+package useraddressstorage
 
 import "gorm.io/gorm"
 

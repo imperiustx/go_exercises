@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/middleware"
-	"github.com/imperiustx/go_excercises/module/address/addresstransport/ginaddress"
 	"github.com/imperiustx/go_excercises/module/cart/carttransport/gincart"
 	"github.com/imperiustx/go_excercises/module/category/categorytransport/gincategory"
 	"github.com/imperiustx/go_excercises/module/categoryrestaurant/catrestransport/gincategoryrestaurant"
@@ -20,6 +19,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
+	"github.com/imperiustx/go_excercises/module/useraddress/useraddresstransport/ginuseraddress"
 )
 
 func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
@@ -99,13 +99,13 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		cities.DELETE("/:city-id", gincity.DeleteCity(appCtx))
 	}
 
-	addresses := v1.Group("/addresses")
+	useraddresses := v1.Group("/user-addresses")
 	{
-		addresses.POST("", ginaddress.CreateAddress(appCtx))
-		addresses.GET("", ginaddress.ListAddress(appCtx))
-		addresses.GET("/:add-id", ginaddress.GetAddress(appCtx))
-		addresses.PUT("/:add-id", ginaddress.UpdateAddress(appCtx))
-		addresses.DELETE("/:add-id", ginaddress.DeleteAddress(appCtx))
+		useraddresses.POST("", ginuseraddress.CreateUserAddress(appCtx))
+		useraddresses.GET("", ginuseraddress.ListUserAddress(appCtx))
+		useraddresses.GET("/:ua-id", ginuseraddress.GetUserAddress(appCtx))
+		useraddresses.PUT("/:ua-id", ginuseraddress.UpdateUserAddress(appCtx))
+		useraddresses.DELETE("/:ua-id", ginuseraddress.DeleteUserAddress(appCtx))
 	}
 
 	categories := v1.Group("/categories")
