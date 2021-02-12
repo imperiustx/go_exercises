@@ -4,7 +4,7 @@ import "github.com/imperiustx/go_excercises/common"
 
 type CategoryCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	Name                  string        `json:"name" gorm:"not null"`
+	Name                  string        `json:"name" `
 	Description           string        `json:"description"`
 	Icon                  *common.Image `json:"icon"`
 }

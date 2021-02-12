@@ -29,7 +29,10 @@ func Update(appCtx appctx.AppContext) func(c *gin.Context) {
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		bizUser := userbusiness.NewUpdateUserBiz(store, requester)
 
-		if err := bizUser.UpdateUser(c.Request.Context(), int(uid.GetLocalID()), &user); err != nil {
+		if err := bizUser.UpdateUser(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(uid.GetLocalID())},
+			&user); err != nil {
 			panic(err)
 		}
 

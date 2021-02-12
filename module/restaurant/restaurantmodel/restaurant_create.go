@@ -4,10 +4,12 @@ import "github.com/imperiustx/go_excercises/common"
 
 type RestaurantCreate struct {
 	common.SQLModelCreate `json:",inline"`
+	OwnerID               int           `json:"owner_id"`
 	Name                  string        `json:"name"`
-	Address               string        `json:"address"`
-	Latitude              float64       `json:"latitude"`
-	Longitude             float64       `json:"longitude"`
+	Addr                  string        `json:"addr"`
+	CityID                int           `json:"city_id"`
+	Lat                   float64       `json:"lat"`
+	Lng                   float64       `json:"lng"`
 	Logo                  *common.Image `json:"logo"`
 	ShippingFee           int           `json:"shipping_fee"`
 }

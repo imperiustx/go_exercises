@@ -29,7 +29,7 @@ func NewDeleteUserBiz(store DeleteUserStorage, requester common.Requester) *dele
 	}
 }
 
-func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) error {
+func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]interface{}) error {
 	user, err := biz.store.FindUser(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(usermodel.EntityName, err)

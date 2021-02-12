@@ -8,8 +8,8 @@ const EntityName = "OrderTracking"
 
 type OrderTracking struct {
 	common.SQLModel
-	OrderID int    `json:"order_id" gorm:"not null"`
-	State   string `json:"state" gorm:"not null"`
+	OrderID int    `json:"order_id" `
+	State   string `json:"state" `
 }
 
 func (OrderTracking) TableName() string {

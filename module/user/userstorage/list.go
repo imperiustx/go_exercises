@@ -13,6 +13,7 @@ func (s *sqlStore) ListUser(
 	paging *common.Paging,
 	order *common.OrderSort,
 	moreKeys ...string) ([]usermodel.User, error) {
+		
 	db := s.db.Table(usermodel.User{}.TableName())
 	var users []usermodel.User
 

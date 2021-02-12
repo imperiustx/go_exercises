@@ -9,9 +9,9 @@ const EntityName = "RestaurantRating"
 // RestaurantRating restaurantrating
 type RestaurantRating struct {
 	common.SQLModel
-	UserID       int     `json:"user_id" gorm:"not null"`
-	RestaurantID int     `json:"restaurant_id" gorm:"not null"`
-	Point        float32 `json:"point" gorm:"not null"`
+	UserID       int     `json:"user_id" `
+	RestaurantID int     `json:"restaurant_id" `
+	Point        float32 `json:"point" `
 	Comment      string  `json:"comment"`
 }
 

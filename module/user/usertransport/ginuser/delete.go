@@ -2,7 +2,6 @@ package ginuser
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,20 +12,20 @@ import (
 
 func Delete(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		idString := c.Param("user-id")
-		id, err := strconv.Atoi(idString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		bizUser := userbusiness.NewDeleteUserBiz(store, requester)
 
+		uid, err := common.FromBase58(c.Param("user-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
 		if err := bizUser.DeleteUser(
 			c.Request.Context(),
-			map[string]interface{}{"id": id},
+			map[string]interface{}{"id": int(uid.GetLocalID())},
 		); err != nil {
 			panic(err)
 		}
