@@ -2,7 +2,6 @@ package ginrestaurant
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -23,8 +22,7 @@ func UpdateRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		idString := c.Param("res-id")
-		id, err := strconv.Atoi(idString)
+		rid, err := common.FromBase58(c.Param("res-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -32,7 +30,10 @@ func UpdateRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := restaurantstorage.NewSQLStore(db)
 		bizRestaurant := restaurantbusiness.NewUpdateRestaurantBiz(store)
 
-		if err := bizRestaurant.UpdateRestaurant(c.Request.Context(), id, &restaurant); err != nil {
+		if err := bizRestaurant.UpdateRestaurant(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(rid.GetLocalID())},
+			&restaurant); err != nil {
 			panic(err)
 		}
 

@@ -6,12 +6,20 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 )
 
-func (s *sqlStore) FindRestaurant(ctx context.Context, id int) (*restaurantmodel.Restaurant, error) {
-	db := s.db
+func (s *sqlStore) FindRestaurant(
+	ctx context.Context,
+	conditions map[string]interface{},
+	moreInfo ...string) (*restaurantmodel.Restaurant, error) {
+
+	db := s.db.Table(restaurantmodel.Restaurant{}.TableName())
+
+	for i := range moreInfo {
+		db = db.Preload(moreInfo[i])
+	}
+
 	var restaurant restaurantmodel.Restaurant
 
-	if err := db.Where("id = ?", id).
-		First(&restaurant).Error; err != nil {
+	if err := db.Where(conditions).First(&restaurant).Error; err != nil {
 		return nil, err
 	}
 

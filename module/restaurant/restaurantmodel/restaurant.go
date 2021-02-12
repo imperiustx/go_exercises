@@ -11,7 +11,7 @@ type Restaurant struct {
 	common.SQLModel
 	OwnerID     int           `json:"owner_id" gorm:"not null"`
 	Name        string        `json:"name" gorm:"not null"`
-	Address     string        `json:"address" gorm:"not null"`
+	Address     string        `json:"addr" gorm:"not null"`
 	CityID      int           `json:"city_id"`
 	Latitude    float64       `json:"latitude"`
 	Longitude   float64       `json:"longitude"`

@@ -10,8 +10,11 @@ import (
 
 // DeleteRestaurantStorage delete
 type DeleteRestaurantStorage interface {
-	FindRestaurant(ctx context.Context, id int) (*restaurantmodel.Restaurant, error)
-	DeleteRestaurant(id int) error
+	FindRestaurant(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*restaurantmodel.Restaurant, error)
+	DeleteRestaurant(conditions map[string]interface{}) error
 }
 
 type deleteRestaurant struct {
@@ -23,8 +26,8 @@ func NewDeleteRestaurantBiz(store DeleteRestaurantStorage) *deleteRestaurant {
 	return &deleteRestaurant{store: store}
 }
 
-func (biz *deleteRestaurant) DeleteRestaurant(ctx context.Context, id int) error {
-	restaurant, err := biz.store.FindRestaurant(ctx, id)
+func (biz *deleteRestaurant) DeleteRestaurant(ctx context.Context, conditions map[string]interface{}) error {
+	restaurant, err := biz.store.FindRestaurant(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(restaurantmodel.EntityName, err)
 	}
@@ -33,7 +36,7 @@ func (biz *deleteRestaurant) DeleteRestaurant(ctx context.Context, id int) error
 		return common.ErrCannotGetEntity(restaurantmodel.EntityName, errors.New("restaurant note found"))
 	}
 
-	if err := biz.store.DeleteRestaurant(id); err != nil {
+	if err := biz.store.DeleteRestaurant(conditions); err != nil {
 		return err
 	}
 
