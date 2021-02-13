@@ -9,7 +9,12 @@ import (
 
 // ListRestaurantRatingStorage list
 type ListRestaurantRatingStorage interface {
-	ListRestaurantRating(ctx context.Context, paging *common.Paging) ([]restaurantratingmodel.RestaurantRating, error)
+	ListRestaurantRating(
+		ctx context.Context,
+		filter *restaurantratingmodel.Filter,
+		paging *common.Paging,
+		order *common.OrderSort,
+		moreKeys ...string) ([]restaurantratingmodel.RestaurantRating, error)
 }
 
 type listRestaurantRating struct {
@@ -21,8 +26,14 @@ func NewListRestaurantRatingBiz(store ListRestaurantRatingStorage) *listRestaura
 	return &listRestaurantRating{store: store}
 }
 
-func (biz *listRestaurantRating) ListAllRestaurantRating(ctx context.Context, paging *common.Paging) ([]restaurantratingmodel.RestaurantRating, error) {
-	data, err := biz.store.ListRestaurantRating(ctx, paging)
+func (biz *listRestaurantRating) ListAllRestaurantRating(
+	ctx context.Context,
+	filter *restaurantratingmodel.Filter,
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]restaurantratingmodel.RestaurantRating, error) {
+
+	data, err := biz.store.ListRestaurantRating(ctx, filter, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantratingmodel.EntityName, err)
 	}

@@ -10,8 +10,14 @@ import (
 
 // UpdateRestaurantRatingStorage update
 type UpdateRestaurantRatingStorage interface {
-	FindRestaurantRating(ctx context.Context, id int) (*restaurantratingmodel.RestaurantRating, error)
-	UpdateRestaurantRating(ctx context.Context, id int, data *restaurantratingmodel.RestaurantRatingUpdate) error
+	FindRestaurantRating(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*restaurantratingmodel.RestaurantRating, error)
+	UpdateRestaurantRating(
+		ctx context.Context, 
+		conditions map[string]interface{},
+		data *restaurantratingmodel.RestaurantRatingUpdate) error
 }
 
 type updateRestaurantRating struct {
@@ -23,17 +29,24 @@ func NewUpdateRestaurantRatingBiz(store UpdateRestaurantRatingStorage) *updateRe
 	return &updateRestaurantRating{store: store}
 }
 
-func (biz *updateRestaurantRating) UpdateRestaurantRating(ctx context.Context, id int, data *restaurantratingmodel.RestaurantRatingUpdate) error {
-	restaurantrating, err := biz.store.FindRestaurantRating(ctx, id)
+func (biz *updateRestaurantRating) UpdateRestaurantRating(
+	ctx context.Context, 
+	conditions map[string]interface{},
+	data *restaurantratingmodel.RestaurantRatingUpdate) error {
+
+	restaurantrating, err := biz.store.FindRestaurantRating(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(restaurantratingmodel.EntityName, err)
 	}
 
 	if restaurantrating.Status == 0 {
-		return common.ErrCannotGetEntity(restaurantratingmodel.EntityName, errors.New("restaurantrating not found"))
+		return common.ErrCannotGetEntity(
+			restaurantratingmodel.EntityName, 
+			errors.New("restaurantrating not found"),
+		)
 	}
 
-	if err := biz.store.UpdateRestaurantRating(ctx, restaurantrating.ID, data); err != nil {
+	if err := biz.store.UpdateRestaurantRating(ctx, conditions, data); err != nil {
 		return common.ErrCannotUpdateEntity(restaurantratingmodel.EntityName, err)
 	}
 

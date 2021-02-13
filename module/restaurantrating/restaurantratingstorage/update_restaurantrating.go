@@ -7,12 +7,13 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingmodel"
 )
 
-func (s *sqlStore) UpdateRestaurantRating(ctx context.Context, id int, data *restaurantratingmodel.RestaurantRatingUpdate) error {
-	db := s.db
+func (s *sqlStore) UpdateRestaurantRating(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	data *restaurantratingmodel.RestaurantRatingUpdate) error {
+	db := s.db.Table(data.TableName())
 
-	if err := db.Table(data.TableName()).
-		Where("id = ?", id).
-		Updates(data).Error; err != nil {
+	if err := db.Where(conditions).Updates(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

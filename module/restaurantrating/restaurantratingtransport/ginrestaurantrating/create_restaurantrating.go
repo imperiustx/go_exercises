@@ -14,18 +14,19 @@ import (
 // CreateRestaurantRating a restaurantrating
 func CreateRestaurantRating(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		db := appCtx.GetDBConnection()
 		var restaurantrating restaurantratingmodel.RestaurantRatingCreate
+
 		if err := c.ShouldBindJSON(&restaurantrating); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		// Create restaurantrating
-		db := appCtx.GetDBConnection()
 		store := restaurantratingstorage.NewSQLStore(db)
-
 		bizRestaurantRating := restaurantratingbusiness.NewCreateRestaurantRatingBiz(store)
 
-		if err := bizRestaurantRating.CreateNewRestaurantRating(c.Request.Context(), &restaurantrating); err != nil {
+		if err := bizRestaurantRating.CreateNewRestaurantRating(
+			c.Request.Context(),
+			&restaurantrating); err != nil {
 			panic(err)
 		}
 

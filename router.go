@@ -51,9 +51,9 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		restaurantratings.POST("", ginrestaurantrating.CreateRestaurantRating(appCtx))
 		restaurantratings.GET("", ginrestaurantrating.ListRestaurantRating(appCtx))
-		restaurantratings.GET("/:res-id", ginrestaurantrating.GetRestaurantRating(appCtx))
-		restaurantratings.PUT("/:res-id", ginrestaurantrating.UpdateRestaurantRating(appCtx))
-		restaurantratings.DELETE("/:res-id", ginrestaurantrating.DeleteRestaurantRating(appCtx))
+		restaurantratings.GET("/:rr-id", ginrestaurantrating.GetRestaurantRating(appCtx))
+		restaurantratings.PUT("/:rr-id", ginrestaurantrating.UpdateRestaurantRating(appCtx))
+		restaurantratings.DELETE("/:rr-id", ginrestaurantrating.DeleteRestaurantRating(appCtx))
 	}
 
 	restaurantlikes := v1.Group("/res-likes")
