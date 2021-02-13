@@ -9,7 +9,12 @@ import (
 
 // ListRestaurantLikeStorage list
 type ListRestaurantLikeStorage interface {
-	ListRestaurantLike(ctx context.Context, paging *common.Paging) ([]restaurantlikemodel.RestaurantLike, error)
+	ListRestaurantLike(
+		ctx context.Context,
+		filter *restaurantlikemodel.Filter,
+		paging *common.Paging,
+		order *common.OrderSort,
+		moreKeys ...string) ([]restaurantlikemodel.RestaurantLike, error)
 }
 
 type listRestaurantLike struct {
@@ -21,8 +26,14 @@ func NewListRestaurantLikeBiz(store ListRestaurantLikeStorage) *listRestaurantLi
 	return &listRestaurantLike{store: store}
 }
 
-func (biz *listRestaurantLike) ListAllRestaurantLike(ctx context.Context, paging *common.Paging) ([]restaurantlikemodel.RestaurantLike, error) {
-	data, err := biz.store.ListRestaurantLike(ctx, paging)
+func (biz *listRestaurantLike) ListRestaurantLike(
+	ctx context.Context,
+	filter *restaurantlikemodel.Filter,
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]restaurantlikemodel.RestaurantLike, error) {
+
+	data, err := biz.store.ListRestaurantLike(ctx, filter, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantlikemodel.EntityName, err)
 	}

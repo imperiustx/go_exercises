@@ -1,16 +1,18 @@
 package restaurantlikestorage
 
-import "github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
+import (
+	"context"
 
-func (s *sqlStore) DeleteRestaurantLike(uid, rid int) error {
-	db := s.db
+	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
+)
 
-	// TODO: recheck this one
-	if err := db.Table("restaurant_likes").
-		Delete(&restaurantlikemodel.RestaurantLike{
-			UserID:       uid,
-			RestaurantID: rid,
-		}).Error; err != nil {
+func (s *sqlStore) DeleteRestaurantLike(ctx context.Context, uid, rid int) error {
+	db := s.db.Table(restaurantlikemodel.RestaurantLike{}.TableName())
+
+	if err := db.Delete(&restaurantlikemodel.RestaurantLike{
+		UserID:       uid,
+		RestaurantID: rid,
+	}).Error; err != nil {
 		return err
 	}
 
