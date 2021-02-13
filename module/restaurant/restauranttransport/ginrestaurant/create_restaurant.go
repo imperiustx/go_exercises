@@ -1,7 +1,6 @@
 package ginrestaurant
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,7 @@ func CreateRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		store := restaurantstorage.NewSQLStore(db)
 		bizRestaurant := restaurantbusiness.NewCreateRestaurantBiz(store)
-		fmt.Println("<><><><>", restaurant)
+
 		if err := bizRestaurant.CreateNewRestaurant(c.Request.Context(), &restaurant); err != nil {
 			panic(err)
 		}

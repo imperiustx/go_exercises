@@ -2,7 +2,6 @@ package gincategory
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -14,17 +13,20 @@ import (
 // DeleteCategory a category
 func DeleteCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		idString := c.Param("cat-id")
-		id, err := strconv.Atoi(idString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := categorystorage.NewSQLStore(db)
 		bizCategory := categorybusiness.NewDeleteCategoryBiz(store)
 
-		if err := bizCategory.DeleteCategory(c.Request.Context(), id); err != nil {
+		cid, err := common.FromBase58(c.Param("user-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		if err := bizCategory.DeleteCategory(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(cid.GetLocalID())},
+		); err != nil {
 			panic(err)
 		}
 

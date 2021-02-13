@@ -10,8 +10,14 @@ import (
 
 // UpdateCategoryStorage update
 type UpdateCategoryStorage interface {
-	FindCategory(ctx context.Context, id int) (*categorymodel.Category, error)
-	UpdateCategory(ctx context.Context, id int, data *categorymodel.CategoryUpdate) error
+	FindCategory(
+		ctx context.Context, 
+		conditions map[string]interface{},
+		moreInfo ...string) (*categorymodel.Category, error)
+	UpdateCategory(
+		ctx context.Context, 
+		conditions map[string]interface{}, 
+		data *categorymodel.CategoryUpdate) error
 }
 
 type updateCategory struct {
@@ -23,8 +29,12 @@ func NewUpdateCategoryBiz(store UpdateCategoryStorage) *updateCategory {
 	return &updateCategory{store: store}
 }
 
-func (biz *updateCategory) UpdateCategory(ctx context.Context, id int, data *categorymodel.CategoryUpdate) error {
-	category, err := biz.store.FindCategory(ctx, id)
+func (biz *updateCategory) UpdateCategory(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	data *categorymodel.CategoryUpdate) error {
+
+	category, err := biz.store.FindCategory(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(categorymodel.EntityName, err)
 	}
@@ -33,7 +43,7 @@ func (biz *updateCategory) UpdateCategory(ctx context.Context, id int, data *cat
 		return common.ErrCannotGetEntity(categorymodel.EntityName, errors.New("category not found"))
 	}
 
-	if err := biz.store.UpdateCategory(ctx, category.ID, data); err != nil {
+	if err := biz.store.UpdateCategory(ctx, conditions, data); err != nil {
 		return common.ErrCannotUpdateEntity(categorymodel.EntityName, err)
 	}
 

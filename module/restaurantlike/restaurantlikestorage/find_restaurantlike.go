@@ -6,8 +6,17 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
 )
 
-func (s *sqlStore) FindRestaurantLike(ctx context.Context, uid, rid int) (*restaurantlikemodel.RestaurantLike, error) {
-	db := s.db
+func (s *sqlStore) FindRestaurantLike(
+	ctx context.Context,
+	uid, rid int,
+	moreInfo ...string) (*restaurantlikemodel.RestaurantLike, error) {
+
+	db := s.db.Table(restaurantlikemodel.RestaurantLike{}.TableName())
+
+	for i := range moreInfo {
+		db = db.Preload(moreInfo[i])
+	}
+
 	var restaurantlike restaurantlikemodel.RestaurantLike
 
 	if err := db.Where(&restaurantlikemodel.RestaurantLike{

@@ -9,7 +9,11 @@ import (
 
 // ListCategoryStorage list
 type ListCategoryStorage interface {
-	ListCategory(ctx context.Context, paging *common.Paging) ([]categorymodel.Category, error)
+	ListCategory(
+		ctx context.Context,
+		paging *common.Paging,
+		order *common.OrderSort,
+		moreKeys ...string) ([]categorymodel.Category, error)
 }
 
 type listCategory struct {
@@ -21,8 +25,13 @@ func NewListCategoryBiz(store ListCategoryStorage) *listCategory {
 	return &listCategory{store: store}
 }
 
-func (biz *listCategory) ListAllCategory(ctx context.Context, paging *common.Paging) ([]categorymodel.Category, error) {
-	data, err := biz.store.ListCategory(ctx, paging)
+func (biz *listCategory) ListAllCategory(
+	ctx context.Context,
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]categorymodel.Category, error) {
+
+	data, err := biz.store.ListCategory(ctx, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(categorymodel.EntityName, err)
 	}

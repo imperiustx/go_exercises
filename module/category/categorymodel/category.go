@@ -9,7 +9,7 @@ const EntityName = "Category"
 // Category model
 type Category struct {
 	common.SQLModel
-	Name        string        `json:"name" `
+	Name        string        `json:"name"`
 	Description string        `json:"description"`
 	Icon        *common.Image `json:"icon"`
 }

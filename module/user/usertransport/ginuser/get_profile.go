@@ -12,14 +12,15 @@ import (
 
 func GetProfile(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("user-id"))
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := userstorage.NewSQLStore(db)
 		bizUser := userbusiness.NewGetUserBiz(store)
+
+		uid, err := common.FromBase58(c.Param("user-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
 		
 		user, err := bizUser.GetUser(
 			c.Request.Context(),

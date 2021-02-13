@@ -7,11 +7,12 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingmodel"
 )
 
-func (s *sqlStore) CreateRestaurantRating(ctx context.Context, data *restaurantratingmodel.RestaurantRatingCreate) error {
-	db := s.db
+func (s *sqlStore) CreateRestaurantRating(
+	ctx context.Context, 
+	data *restaurantratingmodel.RestaurantRatingCreate) error {
+	db := s.db.Table(data.TableName())
 
-	if err := db.Table(data.TableName()).
-		Create(data).Error; err != nil {
+	if err := db.Create(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

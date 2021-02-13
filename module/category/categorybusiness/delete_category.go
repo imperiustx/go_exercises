@@ -10,8 +10,11 @@ import (
 
 // DeleteCategoryStorage delete
 type DeleteCategoryStorage interface {
-	FindCategory(ctx context.Context, id int) (*categorymodel.Category, error)
-	DeleteCategory(id int) error
+	FindCategory(
+		ctx context.Context, 
+		conditions map[string]interface{},
+		moreInfo ...string) (*categorymodel.Category, error)
+	DeleteCategory(ctx context.Context, conditions map[string]interface{}) error
 }
 
 type deleteCategory struct {
@@ -23,8 +26,8 @@ func NewDeleteCategoryBiz(store DeleteCategoryStorage) *deleteCategory {
 	return &deleteCategory{store: store}
 }
 
-func (biz *deleteCategory) DeleteCategory(ctx context.Context, id int) error {
-	category, err := biz.store.FindCategory(ctx, id)
+func (biz *deleteCategory) DeleteCategory(ctx context.Context, conditions map[string]interface{}) error {
+	category, err := biz.store.FindCategory(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(categorymodel.EntityName, err)
 	}
@@ -33,7 +36,7 @@ func (biz *deleteCategory) DeleteCategory(ctx context.Context, id int) error {
 		return common.ErrCannotGetEntity(categorymodel.EntityName, errors.New("category not found"))
 	}
 
-	if err := biz.store.DeleteCategory(id); err != nil {
+	if err := biz.store.DeleteCategory(ctx, conditions); err != nil {
 		return err
 	}
 

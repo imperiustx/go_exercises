@@ -1,11 +1,15 @@
 package categorystorage
 
-func (s *sqlStore) DeleteCategory(id int) error {
-	db := s.db
+import (
+	"context"
 
-	if err := db.Table("categories").
-		Where("id = ?", id).
-		Update("status", 0).Error; err != nil {
+	"github.com/imperiustx/go_excercises/module/category/categorymodel"
+)
+
+func (s *sqlStore) DeleteCategory(ctx context.Context, conditions map[string]interface{}) error {
+	db := s.db.Table(categorymodel.Category{}.TableName())
+
+	if err := db.Where(conditions).Update("status", 0).Error; err != nil {
 		return err
 	}
 

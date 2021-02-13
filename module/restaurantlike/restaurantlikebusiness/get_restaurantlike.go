@@ -9,7 +9,10 @@ import (
 
 // GetRestaurantLikeStorage get
 type GetRestaurantLikeStorage interface {
-	FindRestaurantLike(ctx context.Context, uid, rid int) (*restaurantlikemodel.RestaurantLike, error)
+	FindRestaurantLike(
+		ctx context.Context,
+		uid, rid int,
+		moreInfo ...string) (*restaurantlikemodel.RestaurantLike, error)
 }
 
 type getRestaurantLikeBiz struct {
@@ -21,7 +24,11 @@ func NewGetRestaurantLikeBiz(store GetRestaurantLikeStorage) *getRestaurantLikeB
 	return &getRestaurantLikeBiz{store: store}
 }
 
-func (biz *getRestaurantLikeBiz) GetRestaurantLike(ctx context.Context, uid, rid int) (*restaurantlikemodel.RestaurantLike, error) {
+func (biz *getRestaurantLikeBiz) GetRestaurantLike(
+	ctx context.Context, 
+	uid, rid int, 
+	moreInfo ...string) (*restaurantlikemodel.RestaurantLike, error) {
+		
 	restaurantlike, err := biz.store.FindRestaurantLike(ctx, uid, rid)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(restaurantlikemodel.EntityName, err)

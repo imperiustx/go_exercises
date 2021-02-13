@@ -1,11 +1,18 @@
 package restaurantratingstorage
 
-func (s *sqlStore) DeleteRestaurantRating(id int) error {
-	db := s.db
+import (
+	"context"
 
-	if err := db.Table("restaurant_ratings").
-		Where("id = ?", id).
-		Update("status", 0).Error; err != nil {
+	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingmodel"
+)
+
+func (s *sqlStore) DeleteRestaurantRating(
+	ctx context.Context,
+	conditions map[string]interface{}) error {
+
+	db := s.db.Table(restaurantratingmodel.RestaurantRating{}.TableName())
+
+	if err := db.Where(conditions).Update("status", 0).Error; err != nil {
 		return err
 	}
 

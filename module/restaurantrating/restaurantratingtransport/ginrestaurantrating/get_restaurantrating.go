@@ -13,21 +13,24 @@ import (
 // GetRestaurantRating a restaurantrating
 func GetRestaurantRating(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		rid, err := common.FromBase58(c.Param("res-id"))
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := restaurantratingstorage.NewSQLStore(db)
-
 		bizRestaurantRating := restaurantratingbusiness.NewGetRestaurantRatingBiz(store)
-		restaurantrating, err := bizRestaurantRating.GetRestaurantRating(c.Request.Context(), int(rid.GetLocalID()))
+
+		rrid, err := common.FromBase58(c.Param("rr-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+		
+		restaurantrating, err := bizRestaurantRating.GetRestaurantRating(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(rrid.GetLocalID())})
 		if err != nil {
 			panic(err)
 		}
 
-		restaurantrating.GenUID(common.DBTypeRestaurantRating, 2)
+		restaurantrating.GenUID(common.DBTypeRestaurantRating, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(restaurantrating))
 	}

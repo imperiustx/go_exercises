@@ -6,8 +6,8 @@ const EntityName = "RestaurantLike"
 
 // RestaurantLike model
 type RestaurantLike struct {
-	UserID       int        `json:"user_id" gorm:"primaryKey;not null"`
-	RestaurantID int        `json:"restaurant_id" gorm:"primaryKey;index;not null"`
+	UserID       int        `json:"user_id"`
+	RestaurantID int        `json:"restaurant_id"`
 	CreatedAt    *time.Time `json:"created_at"`
 }
 

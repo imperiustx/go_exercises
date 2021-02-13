@@ -9,7 +9,10 @@ import (
 
 // GetRestaurantRatingStorage get
 type GetRestaurantRatingStorage interface {
-	FindRestaurantRating(ctx context.Context, id int) (*restaurantratingmodel.RestaurantRating, error)
+	FindRestaurantRating(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*restaurantratingmodel.RestaurantRating, error)
 }
 
 type getRestaurantRating struct {
@@ -21,8 +24,12 @@ func NewGetRestaurantRatingBiz(store GetRestaurantRatingStorage) *getRestaurantR
 	return &getRestaurantRating{store: store}
 }
 
-func (biz *getRestaurantRating) GetRestaurantRating(ctx context.Context, id int) (*restaurantratingmodel.RestaurantRating, error) {
-	restaurantrating, err := biz.store.FindRestaurantRating(ctx, id)
+func (biz *getRestaurantRating) GetRestaurantRating(
+	ctx context.Context,
+	conditions map[string]interface{},
+	moreInfo ...string) (*restaurantratingmodel.RestaurantRating, error) {
+		
+	restaurantrating, err := biz.store.FindRestaurantRating(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(restaurantratingmodel.EntityName, err)
 	}

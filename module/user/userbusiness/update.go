@@ -37,6 +37,7 @@ func (biz *updateUser) UpdateUser(
 	ctx context.Context,
 	conditions map[string]interface{},
 	data *usermodel.UserUpdate) error {
+		
 	user, err := biz.store.FindUser(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(usermodel.EntityName, err)

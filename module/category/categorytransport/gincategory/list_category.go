@@ -13,18 +13,24 @@ import (
 // ListCategory a category
 func ListCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var paging common.Paging
-
+		var (
+			paging common.Paging
+			order  common.OrderSort
+		)
 		if err := c.ShouldBindJSON(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
+		if err := c.ShouldBind(&order); err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
 		paging.Fulfill()
 
 		db := appCtx.GetDBConnection()
 		store := categorystorage.NewSQLStore(db)
-
 		bizCategory := categorybusiness.NewListCategoryBiz(store)
-		categorys, err := bizCategory.ListAllCategory(c.Request.Context(), &paging)
+
+		categorys, err := bizCategory.ListAllCategory(c.Request.Context(), &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

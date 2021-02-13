@@ -25,7 +25,9 @@ func CreateRestaurantLike(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		bizRestaurantLike := restaurantlikebusiness.NewCreateRestaurantLikeBiz(store)
 
-		if err := bizRestaurantLike.CreateNewRestaurantLike(c.Request.Context(), &restaurantlike); err != nil {
+		if err := bizRestaurantLike.CreateNewRestaurantLike(
+			c.Request.Context(),
+			&restaurantlike); err != nil {
 			panic(err)
 		}
 

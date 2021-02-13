@@ -1,4 +1,4 @@
-package categoryrestaurantstorage
+package restaurantfoodstorage
 
 import "gorm.io/gorm"
 
