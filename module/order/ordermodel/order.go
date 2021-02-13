@@ -9,9 +9,9 @@ const EntityName = "Order"
 // Order model
 type Order struct {
 	common.SQLModel
-	UserID     int     `json:"user_id" `
-	TotalPrice float64 `json:"total_price" `
-	ShipperID  int     `json:"shipper_id" `
+	UserID     int     `json:"user_id"`
+	TotalPrice float64 `json:"total_price"`
+	ShipperID  int     `json:"shipper_id"`
 }
 
 // TableName table name

@@ -12,9 +12,9 @@ import (
 type DeleteOrderStorage interface {
 	FindOrder(
 		ctx context.Context,
-		id int,
+		conditions map[string]interface{},
 		moreInfo ...string) (*ordermodel.Order, error)
-	DeleteOrder(id int) error
+	DeleteOrder(ctx context.Context, conditions map[string]interface{}) error
 }
 
 type deleteOrder struct {
@@ -26,8 +26,8 @@ func NewDeleteOrderBiz(store DeleteOrderStorage) *deleteOrder {
 	return &deleteOrder{store: store}
 }
 
-func (biz *deleteOrder) DeleteOrder(ctx context.Context, id int) error {
-	order, err := biz.store.FindOrder(ctx, id)
+func (biz *deleteOrder) DeleteOrder(ctx context.Context, conditions map[string]interface{}) error {
+	order, err := biz.store.FindOrder(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(ordermodel.EntityName, err)
 	}
@@ -39,7 +39,7 @@ func (biz *deleteOrder) DeleteOrder(ctx context.Context, id int) error {
 		)
 	}
 
-	if err := biz.store.DeleteOrder(id); err != nil {
+	if err := biz.store.DeleteOrder(ctx, conditions); err != nil {
 		return err
 	}
 

@@ -21,15 +21,18 @@ func UpdateOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
+		store := orderstorage.NewSQLStore(db)
+		bizOrder := orderbusiness.NewUpdateOrderBiz(store)
+
 		oid, err := common.FromBase58(c.Param("order-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		store := orderstorage.NewSQLStore(db)
-		bizOrder := orderbusiness.NewUpdateOrderBiz(store)
-
-		if err := bizOrder.UpdateOrder(c.Request.Context(), int(oid.GetLocalID()), &order); err != nil {
+		if err := bizOrder.UpdateOrder(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(oid.GetLocalID())},
+			&order); err != nil {
 			panic(err)
 		}
 
