@@ -20,14 +20,14 @@ func Update(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
+		store := userstorage.NewSQLStore(db)
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+		bizUser := userbusiness.NewUpdateUserBiz(store, requester)
+
 		uid, err := common.FromBase58(c.Param("user-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-
-		store := userstorage.NewSQLStore(db)
-		requester := c.MustGet(common.CurrentUser).(common.Requester)
-		bizUser := userbusiness.NewUpdateUserBiz(store, requester)
 
 		if err := bizUser.UpdateUser(
 			c.Request.Context(),

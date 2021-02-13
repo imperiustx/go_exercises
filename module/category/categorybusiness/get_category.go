@@ -9,7 +9,10 @@ import (
 
 // GetCategoryStorage get
 type GetCategoryStorage interface {
-	FindCategory(ctx context.Context, id int) (*categorymodel.Category, error)
+	FindCategory(
+		ctx context.Context, 
+		conditions map[string]interface{},
+		moreInfo ...string) (*categorymodel.Category, error)
 }
 
 type getCategoryBiz struct {
@@ -21,8 +24,12 @@ func NewGetCategoryBiz(store GetCategoryStorage) *getCategoryBiz {
 	return &getCategoryBiz{store: store}
 }
 
-func (biz *getCategoryBiz) GetCategory(ctx context.Context, id int) (*categorymodel.Category, error) {
-	category, err := biz.store.FindCategory(ctx, id)
+func (biz *getCategoryBiz) GetCategory(
+	ctx context.Context, 
+	conditions map[string]interface{},
+	moreInfo ...string) (*categorymodel.Category, error) {
+
+	category, err := biz.store.FindCategory(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(categorymodel.EntityName, err)
 	}

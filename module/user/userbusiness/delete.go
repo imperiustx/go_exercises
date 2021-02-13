@@ -13,7 +13,7 @@ type DeleteUserStorage interface {
 	FindUser(ctx context.Context, 
 		conditions map[string]interface{}, 
 		moreInfo ...string) (*usermodel.User, error)
-	DeleteUser(conditions map[string]interface{}) error
+	DeleteUser(ctx context.Context, conditions map[string]interface{}) error
 }
 
 type deleteUser struct {
@@ -46,7 +46,7 @@ func (biz *deleteUser) DeleteUser(ctx context.Context, conditions map[string]int
 		return common.ErrNoPermission(nil)
 	}
 
-	if err := biz.store.DeleteUser(conditions); err != nil {
+	if err := biz.store.DeleteUser(ctx, conditions); err != nil {
 		return common.ErrCannotDeleteEntity(usermodel.EntityName, err)
 	}
 

@@ -6,7 +6,6 @@ import (
 	"github.com/imperiustx/go_excercises/middleware"
 	"github.com/imperiustx/go_excercises/module/cart/carttransport/gincart"
 	"github.com/imperiustx/go_excercises/module/category/categorytransport/gincategory"
-	"github.com/imperiustx/go_excercises/module/categoryrestaurant/catrestransport/gincategoryrestaurant"
 	"github.com/imperiustx/go_excercises/module/city/citytransport/gincity"
 	"github.com/imperiustx/go_excercises/module/food/foodtransport/ginfood"
 	"github.com/imperiustx/go_excercises/module/foodlike/foodliketransport/ginfoodlike"
@@ -16,6 +15,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailtransport/ginorderdetail"
 	"github.com/imperiustx/go_excercises/module/ordertracking/ordertrackingtransport/ginordertracking"
 	"github.com/imperiustx/go_excercises/module/restaurant/restauranttransport/ginrestaurant"
+	"github.com/imperiustx/go_excercises/module/restaurantfood/restaurantfoodtransport/ginrestaurantfood"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
@@ -62,6 +62,14 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		restaurantlikes.GET("", ginrestaurantlike.ListRestaurantLike(appCtx))
 		restaurantlikes.GET("/:uid/:rid", ginrestaurantlike.GetRestaurantLike(appCtx))
 		restaurantlikes.DELETE("/:uid/:rid", ginrestaurantlike.DeleteRestaurantLike(appCtx))
+	}
+
+	restaurantfoods := v1.Group("/res-foods")
+	{
+		restaurantfoods.POST("", ginrestaurantfood.CreateRestaurantFood(appCtx))
+		restaurantfoods.GET("", ginrestaurantfood.ListRestaurantFood(appCtx))
+		restaurantfoods.GET("/:rid/:fid", ginrestaurantfood.GetRestaurantFood(appCtx))
+		restaurantfoods.DELETE("/:rid/:fid", ginrestaurantfood.DeleteRestaurantFood(appCtx))
 	}
 
 	foods := v1.Group("/foods")
@@ -142,15 +150,6 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		ordertrackings.GET("/:ot-id", ginordertracking.GetOrderTracking(appCtx))
 		ordertrackings.PUT("/:ot-id", ginordertracking.UpdateOrderTracking(appCtx))
 		ordertrackings.DELETE("/:ot-id", ginordertracking.DeleteOrderTracking(appCtx))
-	}
-
-	categoryrestaurants := v1.Group("/cat-res")
-	{
-		categoryrestaurants.POST("", gincategoryrestaurant.CreateCategoryRestaurant(appCtx))
-		categoryrestaurants.GET("", gincategoryrestaurant.ListCategoryRestaurant(appCtx))
-		categoryrestaurants.GET("/:cid/:rid", gincategoryrestaurant.GetCategoryRestaurant(appCtx))
-		categoryrestaurants.PUT("/:cid/:rid", gincategoryrestaurant.UpdateCategoryRestaurant(appCtx))
-		categoryrestaurants.DELETE("/:cid/:rid", gincategoryrestaurant.DeleteCategoryRestaurant(appCtx))
 	}
 
 	images := v1.Group("/images")

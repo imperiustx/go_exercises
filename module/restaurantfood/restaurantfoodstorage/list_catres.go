@@ -1,20 +1,20 @@
-package categorystorage
+package restaurantfoodstorage
 
 import (
 	"context"
 
 	"github.com/imperiustx/go_excercises/common"
-	"github.com/imperiustx/go_excercises/module/category/categorymodel"
+	"github.com/imperiustx/go_excercises/module/restaurantfood/restaurantfoodmodel"
 )
 
-func (s *sqlStore) ListCategory(
-	ctx context.Context, 
+func (s *sqlStore) ListRestaurantFood(
+	ctx context.Context,
 	paging *common.Paging,
 	order *common.OrderSort,
-	moreKeys ...string) ([]categorymodel.Category, error) {
+	moreKeys ...string) ([]restaurantfoodmodel.RestaurantFood, error) {
 
-	db := s.db.Table(categorymodel.Category{}.TableName())
-	var categorys []categorymodel.Category
+	db := s.db.Table(restaurantfoodmodel.RestaurantFood{}.TableName())
+	var restaurantfoods []restaurantfoodmodel.RestaurantFood
 
 	db = db.Where("status not in (0)")
 
@@ -23,11 +23,7 @@ func (s *sqlStore) ListCategory(
 	}
 
 	db = db.Limit(paging.Limit)
-
-	for _, k := range moreKeys {
-		db = db.Preload(k)
-	}
-
+	//FIXME: fix id
 	if paging.Cursor > 0 {
 		db = db.Where("id < ?", paging.Cursor)
 	} else {
@@ -43,9 +39,9 @@ func (s *sqlStore) ListCategory(
 		}
 	}
 
-	if err := db.Find(&categorys).Error; err != nil {
+	if err := db.Find(&restaurantfoods).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
-	return categorys, nil
+	return restaurantfoods, nil
 }
