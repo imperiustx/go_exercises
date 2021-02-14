@@ -6,7 +6,11 @@ import (
 	"github.com/imperiustx/go_excercises/module/ordertracking/ordertrackingmodel"
 )
 
-func (s *sqlStore) FindOrderTracking(ctx context.Context, id int, moreInfo ...string) (*ordertrackingmodel.OrderTracking, error) {
+func (s *sqlStore) FindOrderTracking(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	moreInfo ...string) (*ordertrackingmodel.OrderTracking, error) {
+
 	db := s.db.Table(ordertrackingmodel.OrderTracking{}.TableName())
 
 	for i := range moreInfo {
@@ -15,7 +19,7 @@ func (s *sqlStore) FindOrderTracking(ctx context.Context, id int, moreInfo ...st
 
 	var ordertracking ordertrackingmodel.OrderTracking
 
-	if err := db.Where("id = ?", id).First(&ordertracking).Error; err != nil {
+	if err := db.Where(conditions).First(&ordertracking).Error; err != nil {
 		return nil, err
 	}
 

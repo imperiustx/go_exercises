@@ -12,9 +12,11 @@ import (
 type DeleteOrderTrackingStorage interface {
 	FindOrderTracking(
 		ctx context.Context,
-		id int,
+		conditions map[string]interface{},
 		moreInfo ...string) (*ordertrackingmodel.OrderTracking, error)
-	DeleteOrderTracking(id int) error
+	DeleteOrderTracking(
+		ctx context.Context,
+		conditions map[string]interface{}) error
 }
 
 type deleteOrderTracking struct {
@@ -26,8 +28,8 @@ func NewDeleteOrderTrackingBiz(store DeleteOrderTrackingStorage) *deleteOrderTra
 	return &deleteOrderTracking{store: store}
 }
 
-func (biz *deleteOrderTracking) DeleteOrderTracking(ctx context.Context, id int) error {
-	ordertracking, err := biz.store.FindOrderTracking(ctx, id)
+func (biz *deleteOrderTracking) DeleteOrderTracking(ctx context.Context, conditions map[string]interface{}) error {
+	ordertracking, err := biz.store.FindOrderTracking(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(ordertrackingmodel.EntityName, err)
 	}
@@ -39,7 +41,7 @@ func (biz *deleteOrderTracking) DeleteOrderTracking(ctx context.Context, id int)
 		)
 	}
 
-	if err := biz.store.DeleteOrderTracking(id); err != nil {
+	if err := biz.store.DeleteOrderTracking(ctx, conditions); err != nil {
 		return err
 	}
 
