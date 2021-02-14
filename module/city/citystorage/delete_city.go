@@ -1,11 +1,11 @@
 package citystorage
 
-func (s *sqlStore) DeleteCity(id int) error {
-	db := s.db
+import "github.com/imperiustx/go_excercises/module/city/citymodel"
 
-	if err := db.Table("cities").
-		Where("id = ?", id).
-		Update("status", 0).Error; err != nil {
+func (s *sqlStore) DeleteCity(id int) error {
+	db := s.db.Table(citymodel.City{}.TableName())
+
+	if err := db.Where("id = ?", id).Update("status", 0).Error; err != nil {
 		return err
 	}
 

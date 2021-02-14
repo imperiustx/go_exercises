@@ -8,10 +8,10 @@ import (
 )
 
 func (s *sqlStore) ListCity(ctx context.Context, paging *common.Paging) ([]citymodel.City, error) {
-	db := s.db
+	db := s.db.Table(citymodel.City{}.TableName())
 	var cities []citymodel.City
 
-	db = db.Table(citymodel.City{}.TableName()).Where("status not in (0)")
+	db = db.Where("status not in (0)")
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)

@@ -10,8 +10,14 @@ import (
 
 // UpdateFoodStorage update
 type UpdateFoodStorage interface {
-	FindFood(ctx context.Context, id int) (*foodmodel.Food, error)
-	UpdateFood(ctx context.Context, id int, data *foodmodel.FoodUpdate) error
+	FindFood(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*foodmodel.Food, error)
+	UpdateFood(
+		ctx context.Context, 
+		conditions map[string]interface{},
+		data *foodmodel.FoodUpdate) error
 }
 
 type updateFood struct {
@@ -23,8 +29,12 @@ func NewUpdateFoodBiz(store UpdateFoodStorage) *updateFood {
 	return &updateFood{store: store}
 }
 
-func (biz *updateFood) UpdateFood(ctx context.Context, id int, data *foodmodel.FoodUpdate) error {
-	food, err := biz.store.FindFood(ctx, id)
+func (biz *updateFood) UpdateFood(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	data *foodmodel.FoodUpdate) error {
+
+	food, err := biz.store.FindFood(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(foodmodel.EntityName, err)
 	}
@@ -33,7 +43,7 @@ func (biz *updateFood) UpdateFood(ctx context.Context, id int, data *foodmodel.F
 		return common.ErrCannotGetEntity(foodmodel.EntityName, errors.New("food not found"))
 	}
 
-	if err := biz.store.UpdateFood(ctx, food.ID, data); err != nil {
+	if err := biz.store.UpdateFood(ctx, conditions, data); err != nil {
 		return common.ErrCannotUpdateEntity(foodmodel.EntityName, err)
 	}
 
