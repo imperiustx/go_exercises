@@ -20,6 +20,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
 	"github.com/imperiustx/go_excercises/module/useraddress/useraddresstransport/ginuseraddress"
+	"github.com/imperiustx/go_excercises/module/userdevicetoken/userdevicetokentransport/ginuserdevicetoken"
 )
 
 func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
@@ -36,6 +37,15 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		users.GET("/:user-id", ginuser.GetProfile(appCtx))
 		users.PUT("/:user-id", ginuser.Update(appCtx))
 		users.DELETE("/:user-id", ginuser.Delete(appCtx))
+	}
+
+	userdevicetokens := v1.Group("/user-device-tokens")
+	{
+		userdevicetokens.POST("", ginuserdevicetoken.Create(appCtx))
+		userdevicetokens.GET("", ginuserdevicetoken.List(appCtx))
+		userdevicetokens.GET("/:udt-id", ginuserdevicetoken.Get(appCtx))
+		userdevicetokens.PUT("/:udt-id", ginuserdevicetoken.Update(appCtx))
+		userdevicetokens.DELETE("/:udt-id", ginuserdevicetoken.Delete(appCtx))
 	}
 
 	restaurants := v1.Group("/restaurants")
