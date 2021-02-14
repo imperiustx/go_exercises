@@ -9,7 +9,13 @@ import (
 
 // CreateFoodLikeStorage create
 type CreateFoodLikeStorage interface {
-	CreateFoodLike(ctx context.Context, data *foodlikemodel.FoodLikeCreate) error
+	FindFoodLike(
+		ctx context.Context,
+		uid, fid int,
+		moreInfo ...string) (*foodlikemodel.FoodLike, error)
+	CreateFoodLike(
+		ctx context.Context,
+		data *foodlikemodel.FoodLikeCreate) error
 }
 
 type createFoodLike struct {
@@ -21,7 +27,15 @@ func NewCreateFoodLikeBiz(store CreateFoodLikeStorage) *createFoodLike {
 	return &createFoodLike{store: store}
 }
 
-func (biz *createFoodLike) CreateNewFoodLike(ctx context.Context, data *foodlikemodel.FoodLikeCreate) error {
+func (biz *createFoodLike) CreateNewFoodLike(
+	ctx context.Context,
+	data *foodlikemodel.FoodLikeCreate) error {
+
+	like, err := biz.store.FindFoodLike(ctx, data.UserID, data.FoodID)
+	if like != nil {
+		return common.ErrEntityExisted(foodlikemodel.EntityName, err)
+	}
+
 	if err := biz.store.CreateFoodLike(ctx, data); err != nil {
 		return common.ErrCannotCreateEntity(foodlikemodel.EntityName, err)
 	}
