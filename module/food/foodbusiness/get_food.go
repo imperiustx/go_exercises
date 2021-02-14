@@ -9,7 +9,10 @@ import (
 
 // GetFoodStorage get
 type GetFoodStorage interface {
-	FindFood(ctx context.Context, id int) (*foodmodel.Food, error)
+	FindFood(
+		ctx context.Context, 
+		conditions map[string]interface{}, 
+		moreInfo ...string) (*foodmodel.Food, error)
 }
 
 type getFoodBiz struct {
@@ -21,8 +24,12 @@ func NewGetFoodBiz(store GetFoodStorage) *getFoodBiz {
 	return &getFoodBiz{store: store}
 }
 
-func (biz *getFoodBiz) GetFood(ctx context.Context, id int) (*foodmodel.Food, error) {
-	food, err := biz.store.FindFood(ctx, id)
+func (biz *getFoodBiz) GetFood(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	moreInfo ...string) (*foodmodel.Food, error) {
+
+	food, err := biz.store.FindFood(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(foodmodel.EntityName, err)
 	}

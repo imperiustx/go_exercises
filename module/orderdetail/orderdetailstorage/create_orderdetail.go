@@ -8,10 +8,9 @@ import (
 )
 
 func (s *sqlStore) CreateOrderDetail(ctx context.Context, data *orderdetailmodel.OrderDetailCreate) error {
-	db := s.db
+	db := s.db.Table(data.TableName())
 
-	if err := db.Table(data.TableName()).
-		Create(data).Error; err != nil {
+	if err := db.Create(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

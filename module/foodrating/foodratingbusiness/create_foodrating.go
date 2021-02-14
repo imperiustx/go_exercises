@@ -9,7 +9,13 @@ import (
 
 // CreateFoodRatingStorage create
 type CreateFoodRatingStorage interface {
-	CreateFoodRating(ctx context.Context, data *foodratingmodel.FoodRatingCreate) error
+	FindFoodRating(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*foodratingmodel.FoodRating, error)
+	CreateFoodRating(
+		ctx context.Context,
+		data *foodratingmodel.FoodRatingCreate) error
 }
 
 type createFoodRating struct {
@@ -21,7 +27,15 @@ func NewCreateFoodRatingBiz(store CreateFoodRatingStorage) *createFoodRating {
 	return &createFoodRating{store: store}
 }
 
-func (biz *createFoodRating) CreateNewFoodRating(ctx context.Context, data *foodratingmodel.FoodRatingCreate) error {
+func (biz *createFoodRating) CreateNewFoodRating(
+	ctx context.Context,
+	data *foodratingmodel.FoodRatingCreate) error {
+
+	rating, err := biz.store.FindFoodRating(ctx, map[string]interface{}{"id": data.ID})
+	if rating != nil {
+		return common.ErrEntityExisted(foodratingmodel.EntityName, err)
+	}
+	
 	if err := biz.store.CreateFoodRating(ctx, data); err != nil {
 		return common.ErrCannotCreateEntity(foodratingmodel.EntityName, err)
 	}

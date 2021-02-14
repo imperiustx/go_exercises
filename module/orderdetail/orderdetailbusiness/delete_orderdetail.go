@@ -10,8 +10,13 @@ import (
 
 // DeleteOrderDetailStorage delete
 type DeleteOrderDetailStorage interface {
-	FindOrderDetail(ctx context.Context, id int) (*orderdetailmodel.OrderDetail, error)
-	DeleteOrderDetail(id int) error
+	FindOrderDetail(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*orderdetailmodel.OrderDetail, error)
+	DeleteOrderDetail(
+		ctx context.Context,
+		conditions map[string]interface{}) error
 }
 
 type deleteOrderDetail struct {
@@ -23,17 +28,23 @@ func NewDeleteOrderDetailBiz(store DeleteOrderDetailStorage) *deleteOrderDetail 
 	return &deleteOrderDetail{store: store}
 }
 
-func (biz *deleteOrderDetail) DeleteOrderDetail(ctx context.Context, id int) error {
-	orderdetail, err := biz.store.FindOrderDetail(ctx, id)
+func (biz *deleteOrderDetail) DeleteOrderDetail(
+	ctx context.Context, 
+	conditions map[string]interface{}) error {
+
+	orderdetail, err := biz.store.FindOrderDetail(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(orderdetailmodel.EntityName, err)
 	}
 
 	if orderdetail.Status == 0 {
-		return common.ErrCannotGetEntity(orderdetailmodel.EntityName, errors.New("orderdetail not found"))
+		return common.ErrCannotGetEntity(
+			orderdetailmodel.EntityName, 
+			errors.New("orderdetail not found"),
+		)
 	}
 
-	if err := biz.store.DeleteOrderDetail(id); err != nil {
+	if err := biz.store.DeleteOrderDetail(ctx, conditions); err != nil {
 		return err
 	}
 

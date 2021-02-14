@@ -8,9 +8,10 @@ import (
 )
 
 func (s *sqlStore) UpdateRestaurantRating(
-	ctx context.Context, 
-	conditions map[string]interface{}, 
+	ctx context.Context,
+	conditions map[string]interface{},
 	data *restaurantratingmodel.RestaurantRatingUpdate) error {
+
 	db := s.db.Table(data.TableName())
 
 	if err := db.Where(conditions).Updates(data).Error; err != nil {

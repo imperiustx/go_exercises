@@ -13,16 +13,20 @@ import (
 // DeleteOrder a order
 func DeleteOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		oid, err := common.FromBase58(c.Param("order-id"))
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := orderstorage.NewSQLStore(db)
 		bizOrder := orderbusiness.NewDeleteOrderBiz(store)
 
-		if err := bizOrder.DeleteOrder(c.Request.Context(), int(oid.GetLocalID())); err != nil {
+		oid, err := common.FromBase58(c.Param("order-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		if err := bizOrder.DeleteOrder(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(oid.GetLocalID())},
+		); err != nil {
 			panic(err)
 		}
 

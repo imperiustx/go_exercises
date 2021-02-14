@@ -1,8 +1,8 @@
 package foodlikemodel
 
 type FoodLikeCreate struct {
-	UserID int `json:"user_id" gorm:"primaryKey;not null"`
-	FoodID int `json:"food_id" gorm:"primaryKey;index;not null"`
+	UserID int `json:"user_id"`
+	FoodID int `json:"food_id"`
 }
 
 func (FoodLikeCreate) TableName() string {

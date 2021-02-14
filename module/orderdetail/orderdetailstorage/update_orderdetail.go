@@ -7,12 +7,14 @@ import (
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
 )
 
-func (s *sqlStore) UpdateOrderDetail(ctx context.Context, id int, data *orderdetailmodel.OrderDetailUpdate) error {
-	db := s.db
+func (s *sqlStore) UpdateOrderDetail(
+	ctx context.Context, 
+	conditions map[string]interface{},
+	data *orderdetailmodel.OrderDetailUpdate) error {
 
-	if err := db.Table(data.TableName()).
-		Where("id = ?", id).
-		Updates(data).Error; err != nil {
+	db := s.db.Table(data.TableName())
+
+	if err := db.Where(conditions).Updates(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

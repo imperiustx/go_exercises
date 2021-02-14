@@ -85,7 +85,6 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		foodlikes.POST("", ginfoodlike.CreateFoodLike(appCtx))
 		foodlikes.GET("", ginfoodlike.ListFoodLike(appCtx))
 		foodlikes.GET("/:uid/:fid", ginfoodlike.GetFoodLike(appCtx))
-		foodlikes.DELETE("/:uid/:fid", ginfoodlike.DeleteFoodLike(appCtx))
 	}
 
 	foodratings := v1.Group("/food-ratings")

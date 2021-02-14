@@ -9,12 +9,12 @@ const EntityName = "Food"
 // Food model
 type Food struct {
 	common.SQLModel
-	RestaurantID int            `json:"restaurant_id" gorm:"not null;index"`
-	CategoryID   int            `json:"category_id" gorm:"not null;index"`
-	Name         string         `json:"name" `
+	RestaurantID int            `json:"restaurant_id"`
+	CategoryID   int            `json:"category_id"`
+	Name         string         `json:"name"`
 	Description  string         `json:"description"`
-	Price        float64        `json:"price" `
-	Images       *common.Images `json:"images" `
+	Price        float64        `json:"price"`
+	Images       *common.Images `json:"images"`
 }
 
 // TableName table name

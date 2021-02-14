@@ -19,10 +19,8 @@ func CreateOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		// Create orderdetail
 		db := appCtx.GetDBConnection()
 		store := orderdetailstorage.NewSQLStore(db)
-
 		bizOrderDetail := orderdetailbusiness.NewCreateOrderDetailBiz(store)
 
 		if err := bizOrderDetail.CreateNewOrderDetail(c.Request.Context(), &orderdetail); err != nil {

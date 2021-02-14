@@ -11,7 +11,7 @@ import (
 type GetOrderStorage interface {
 	FindOrder(
 		ctx context.Context, 
-		id int,
+		conditions map[string]interface{},
 		moreInfo ...string) (*ordermodel.Order, error)
 }
 
@@ -26,9 +26,10 @@ func NewGetOrderBiz(store GetOrderStorage) *getOrderBiz {
 
 func (biz *getOrderBiz) GetOrder(
 	ctx context.Context, 
-	id int,
+	conditions map[string]interface{},
 	moreInfo ...string) (*ordermodel.Order, error) {
-	order, err := biz.store.FindOrder(ctx, id)
+
+	order, err := biz.store.FindOrder(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(ordermodel.EntityName, err)
 	}

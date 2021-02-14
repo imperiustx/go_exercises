@@ -1,11 +1,18 @@
 package foodstorage
 
-func (s *sqlStore) DeleteFood(id int) error {
-	db := s.db
+import (
+	"context"
 
-	if err := db.Table("foods").
-		Where("id = ?", id).
-		Update("status", 0).Error; err != nil {
+	"github.com/imperiustx/go_excercises/module/food/foodmodel"
+)
+
+func (s *sqlStore) DeleteFood(
+	ctx context.Context,
+	conditions map[string]interface{}) error {
+
+	db := s.db.Table(foodmodel.Food{}.TableName())
+
+	if err := db.Where(conditions).Update("status", 0).Error; err != nil {
 		return err
 	}
 

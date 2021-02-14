@@ -13,16 +13,20 @@ import (
 // GetOrder a order
 func GetOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("order-id"))
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := orderstorage.NewSQLStore(db)
-
 		bizOrder := orderbusiness.NewGetOrderBiz(store)
-		order, err := bizOrder.GetOrder(c.Request.Context(), int(uid.GetLocalID()))
+
+		oid, err := common.FromBase58(c.Param("order-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+		
+		order, err := bizOrder.GetOrder(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(oid.GetLocalID())},
+		)
 		if err != nil {
 			panic(err)
 		}

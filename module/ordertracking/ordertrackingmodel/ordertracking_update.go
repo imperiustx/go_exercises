@@ -1,7 +1,7 @@
 package ordertrackingmodel
 
 type OrderTrackingUpdate struct {
-	State string `json:"state" `
+	State string `json:"state"`
 }
 
 func (OrderTrackingUpdate) TableName() string {

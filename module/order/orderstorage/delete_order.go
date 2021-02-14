@@ -1,12 +1,18 @@
 package orderstorage
 
-import "github.com/imperiustx/go_excercises/module/order/ordermodel"
+import (
+	"context"
 
-func (s *sqlStore) DeleteOrder(id int) error {
+	"github.com/imperiustx/go_excercises/module/order/ordermodel"
+)
+
+func (s *sqlStore) DeleteOrder(
+	ctx context.Context,
+	conditions map[string]interface{}) error {
+
 	db := s.db.Table(ordermodel.Order{}.TableName())
 
-	if err := db.Where("id = ?", id).
-		Update("status", 0).Error; err != nil {
+	if err := db.Where(conditions).Update("status", 0).Error; err != nil {
 		return err
 	}
 

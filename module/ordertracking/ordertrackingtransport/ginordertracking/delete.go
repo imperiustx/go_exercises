@@ -13,16 +13,20 @@ import (
 // DeleteOrderTracking a ordertracking
 func DeleteOrderTracking(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		oid, err := common.FromBase58(c.Param("ot-id"))
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := ordertrackingstorage.NewSQLStore(db)
 		bizOrderTracking := ordertrackingbusiness.NewDeleteOrderTrackingBiz(store)
 
-		if err := bizOrderTracking.DeleteOrderTracking(c.Request.Context(), int(oid.GetLocalID())); err != nil {
+		oid, err := common.FromBase58(c.Param("ot-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		if err := bizOrderTracking.DeleteOrderTracking(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(oid.GetLocalID())},
+		); err != nil {
 			panic(err)
 		}
 

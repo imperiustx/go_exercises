@@ -11,7 +11,7 @@ import (
 type GetOrderTrackingStorage interface {
 	FindOrderTracking(
 		ctx context.Context,
-		id int,
+		conditions map[string]interface{},
 		moreInfo ...string) (*ordertrackingmodel.OrderTracking, error)
 }
 
@@ -26,9 +26,10 @@ func NewGetOrderTrackingBiz(store GetOrderTrackingStorage) *getOrderTrackingBiz 
 
 func (biz *getOrderTrackingBiz) GetOrderTracking(
 	ctx context.Context,
-	id int,
+	conditions map[string]interface{},
 	moreInfo ...string) (*ordertrackingmodel.OrderTracking, error) {
-	ordertracking, err := biz.store.FindOrderTracking(ctx, id)
+		
+	ordertracking, err := biz.store.FindOrderTracking(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(ordertrackingmodel.EntityName, err)
 	}

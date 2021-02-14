@@ -11,6 +11,7 @@ func (s *sqlStore) UpdateUserAddress(
 	ctx context.Context,
 	conditions map[string]interface{},
 	data *useraddressmodel.UserAddressUpdate) error {
+		
 	db := s.db.Table(data.TableName())
 
 	if err := db.Where(conditions).Updates(data).Error; err != nil {

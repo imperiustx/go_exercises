@@ -8,10 +8,9 @@ import (
 )
 
 func (s *sqlStore) CreateFood(ctx context.Context, data *foodmodel.FoodCreate) error {
-	db := s.db
+	db := s.db.Table(data.TableName())
 
-	if err := db.Table(data.TableName()).
-		Create(data).Error; err != nil {
+	if err := db.Create(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

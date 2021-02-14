@@ -7,10 +7,14 @@ import (
 	"github.com/imperiustx/go_excercises/module/ordertracking/ordertrackingmodel"
 )
 
-func (s *sqlStore) UpdateOrderTracking(ctx context.Context, id int, data *ordertrackingmodel.OrderTrackingUpdate) error {
+func (s *sqlStore) UpdateOrderTracking(
+	ctx context.Context,
+	conditions map[string]interface{},
+	data *ordertrackingmodel.OrderTrackingUpdate) error {
+
 	db := s.db.Table(data.TableName())
 
-	if err := db.Where("id = ?", id).Updates(data).Error; err != nil {
+	if err := db.Where(conditions).Updates(data).Error; err != nil {
 		return common.ErrDB(err)
 	}
 

@@ -12,9 +12,12 @@ import (
 type UpdateOrderStorage interface {
 	FindOrder(
 		ctx context.Context, 
-		id int,
+		conditions map[string]interface{},
 		moreInfo ...string) (*ordermodel.Order, error)
-	UpdateOrder(ctx context.Context, id int, data *ordermodel.OrderUpdate) error
+	UpdateOrder(
+		ctx context.Context, 
+		conditions map[string]interface{}, 
+		data *ordermodel.OrderUpdate) error
 }
 
 type updateOrder struct {
@@ -26,8 +29,12 @@ func NewUpdateOrderBiz(store UpdateOrderStorage) *updateOrder {
 	return &updateOrder{store: store}
 }
 
-func (biz *updateOrder) UpdateOrder(ctx context.Context, id int, data *ordermodel.OrderUpdate) error {
-	order, err := biz.store.FindOrder(ctx, id)
+func (biz *updateOrder) UpdateOrder(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	data *ordermodel.OrderUpdate) error {
+
+	order, err := biz.store.FindOrder(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(ordermodel.EntityName, err)
 	}
@@ -36,7 +43,7 @@ func (biz *updateOrder) UpdateOrder(ctx context.Context, id int, data *ordermode
 		return common.ErrCannotGetEntity(ordermodel.EntityName, errors.New("order not found"))
 	}
 
-	if err := biz.store.UpdateOrder(ctx, order.ID, data); err != nil {
+	if err := biz.store.UpdateOrder(ctx, conditions, data); err != nil {
 		return common.ErrCannotUpdateEntity(ordermodel.EntityName, err)
 	}
 

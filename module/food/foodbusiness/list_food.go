@@ -9,7 +9,11 @@ import (
 
 // ListFoodStorage list
 type ListFoodStorage interface {
-	ListFood(ctx context.Context, paging *common.Paging) ([]foodmodel.Food, error)
+	ListFood(
+		ctx context.Context, 
+		paging *common.Paging,
+		order *common.OrderSort,
+		moreKeys ...string) ([]foodmodel.Food, error)
 }
 
 type listFood struct {
@@ -21,8 +25,13 @@ func NewListFoodBiz(store ListFoodStorage) *listFood {
 	return &listFood{store: store}
 }
 
-func (biz *listFood) ListAllFood(ctx context.Context, paging *common.Paging) ([]foodmodel.Food, error) {
-	data, err := biz.store.ListFood(ctx, paging)
+func (biz *listFood) ListAllFood(
+	ctx context.Context, 
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]foodmodel.Food, error) {
+
+	data, err := biz.store.ListFood(ctx, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(foodmodel.EntityName, err)
 	}

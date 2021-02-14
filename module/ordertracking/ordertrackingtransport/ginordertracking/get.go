@@ -13,16 +13,19 @@ import (
 // GetOrderTracking a ordertracking
 func GetOrderTracking(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		
+		db := appCtx.GetDBConnection()
+		store := ordertrackingstorage.NewSQLStore(db)
+		bizOrderTracking := ordertrackingbusiness.NewGetOrderTrackingBiz(store)
+
 		uid, err := common.FromBase58(c.Param("ot-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-
-		db := appCtx.GetDBConnection()
-		store := ordertrackingstorage.NewSQLStore(db)
-
-		bizOrderTracking := ordertrackingbusiness.NewGetOrderTrackingBiz(store)
-		ordertracking, err := bizOrderTracking.GetOrderTracking(c.Request.Context(), int(uid.GetLocalID()))
+		ordertracking, err := bizOrderTracking.GetOrderTracking(
+			c.Request.Context(), 
+			map[string]interface{}{"id": int(uid.GetLocalID())},
+		)
 		if err != nil {
 			panic(err)
 		}

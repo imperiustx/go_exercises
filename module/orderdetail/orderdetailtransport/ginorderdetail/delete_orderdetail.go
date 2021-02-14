@@ -2,7 +2,6 @@ package ginorderdetail
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -14,17 +13,20 @@ import (
 // DeleteOrderDetail a orderdetail
 func DeleteOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		idString := c.Param("ord-id")
-		id, err := strconv.Atoi(idString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := orderdetailstorage.NewSQLStore(db)
 		bizOrderDetail := orderdetailbusiness.NewDeleteOrderDetailBiz(store)
 
-		if err := bizOrderDetail.DeleteOrderDetail(c.Request.Context(), id); err != nil {
+		odid, err := common.FromBase58(c.Param("od-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		if err := bizOrderDetail.DeleteOrderDetail(
+			c.Request.Context(),
+			map[string]interface{}{"id": int(odid.GetLocalID())},
+		); err != nil {
 			panic(err)
 		}
 

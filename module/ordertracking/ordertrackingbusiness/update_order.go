@@ -12,9 +12,12 @@ import (
 type UpdateOrderTrackingStorage interface {
 	FindOrderTracking(
 		ctx context.Context,
-		id int,
+		conditions map[string]interface{},
 		moreInfo ...string) (*ordertrackingmodel.OrderTracking, error)
-	UpdateOrderTracking(ctx context.Context, id int, data *ordertrackingmodel.OrderTrackingUpdate) error
+	UpdateOrderTracking(
+		ctx context.Context, 
+		conditions map[string]interface{},
+		data *ordertrackingmodel.OrderTrackingUpdate) error
 }
 
 type updateOrderTracking struct {
@@ -26,8 +29,12 @@ func NewUpdateOrderTrackingBiz(store UpdateOrderTrackingStorage) *updateOrderTra
 	return &updateOrderTracking{store: store}
 }
 
-func (biz *updateOrderTracking) UpdateOrderTracking(ctx context.Context, id int, data *ordertrackingmodel.OrderTrackingUpdate) error {
-	ordertracking, err := biz.store.FindOrderTracking(ctx, id)
+func (biz *updateOrderTracking) UpdateOrderTracking(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	data *ordertrackingmodel.OrderTrackingUpdate) error {
+
+	ordertracking, err := biz.store.FindOrderTracking(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(ordertrackingmodel.EntityName, err)
 	}
@@ -36,7 +43,7 @@ func (biz *updateOrderTracking) UpdateOrderTracking(ctx context.Context, id int,
 		return common.ErrCannotGetEntity(ordertrackingmodel.EntityName, errors.New("ordertracking not found"))
 	}
 
-	if err := biz.store.UpdateOrderTracking(ctx, ordertracking.ID, data); err != nil {
+	if err := biz.store.UpdateOrderTracking(ctx, conditions, data); err != nil {
 		return common.ErrCannotUpdateEntity(ordertrackingmodel.EntityName, err)
 	}
 

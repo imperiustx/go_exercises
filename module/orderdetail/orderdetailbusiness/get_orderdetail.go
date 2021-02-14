@@ -9,7 +9,10 @@ import (
 
 // GetOrderDetailStorage get
 type GetOrderDetailStorage interface {
-	FindOrderDetail(ctx context.Context, id int) (*orderdetailmodel.OrderDetail, error)
+	FindOrderDetail(
+		ctx context.Context, 
+		conditions map[string]interface{}, 
+		moreInfo ...string) (*orderdetailmodel.OrderDetail, error)
 }
 
 type getOrderDetailBiz struct {
@@ -21,8 +24,12 @@ func NewGetOrderDetailBiz(store GetOrderDetailStorage) *getOrderDetailBiz {
 	return &getOrderDetailBiz{store: store}
 }
 
-func (biz *getOrderDetailBiz) GetOrderDetail(ctx context.Context, id int) (*orderdetailmodel.OrderDetail, error) {
-	orderdetail, err := biz.store.FindOrderDetail(ctx, id)
+func (biz *getOrderDetailBiz) GetOrderDetail(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	moreInfo ...string) (*orderdetailmodel.OrderDetail, error) {
+
+	orderdetail, err := biz.store.FindOrderDetail(ctx, conditions)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(orderdetailmodel.EntityName, err)
 	}

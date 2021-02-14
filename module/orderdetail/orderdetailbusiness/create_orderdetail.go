@@ -9,7 +9,13 @@ import (
 
 // CreateOrderDetailStorage create
 type CreateOrderDetailStorage interface {
-	CreateOrderDetail(ctx context.Context, data *orderdetailmodel.OrderDetailCreate) error
+	FindOrderDetail(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*orderdetailmodel.OrderDetail, error)
+	CreateOrderDetail(
+		ctx context.Context,
+		data *orderdetailmodel.OrderDetailCreate) error
 }
 
 type createOrderDetail struct {
@@ -21,7 +27,19 @@ func NewCreateOrderDetailBiz(store CreateOrderDetailStorage) *createOrderDetail 
 	return &createOrderDetail{store: store}
 }
 
-func (biz *createOrderDetail) CreateNewOrderDetail(ctx context.Context, data *orderdetailmodel.OrderDetailCreate) error {
+func (biz *createOrderDetail) CreateNewOrderDetail(
+	ctx context.Context,
+	data *orderdetailmodel.OrderDetailCreate) error {
+
+	orderDetail, err := biz.store.FindOrderDetail(
+		ctx,
+		map[string]interface{}{"id": data.ID}, // TODO: consider this logic
+	)
+
+	if orderDetail != nil {
+		return common.ErrEntityExisted(orderdetailmodel.EntityName, err)
+	}
+
 	if err := biz.store.CreateOrderDetail(ctx, data); err != nil {
 		return common.ErrCannotCreateEntity(orderdetailmodel.EntityName, err)
 	}

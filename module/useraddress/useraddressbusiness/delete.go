@@ -14,7 +14,9 @@ type DeleteUserAddressStorage interface {
 		ctx context.Context,
 		conditions map[string]interface{},
 		moreInfo ...string) (*useraddressmodel.UserAddress, error)
-	DeleteUserAddress(conditions map[string]interface{}) error
+	DeleteUserAddress(
+		ctx context.Context, 
+		conditions map[string]interface{}) error
 }
 
 type deleteUserAddress struct {
@@ -36,7 +38,7 @@ func (biz *deleteUserAddress) DeleteUserAddress(ctx context.Context, conditions 
 		return common.ErrCannotGetEntity(useraddressmodel.EntityName, errors.New("useraddress not found"))
 	}
 
-	if err := biz.store.DeleteUserAddress(conditions); err != nil {
+	if err := biz.store.DeleteUserAddress(ctx, conditions); err != nil {
 		return err
 	}
 

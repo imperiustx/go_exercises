@@ -13,16 +13,19 @@ import (
 // GetOrderDetail a orderdetail
 func GetOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("ord-id"))
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := orderdetailstorage.NewSQLStore(db)
-
 		bizOrderDetail := orderdetailbusiness.NewGetOrderDetailBiz(store)
-		orderdetail, err := bizOrderDetail.GetOrderDetail(c.Request.Context(), int(uid.GetLocalID()))
+
+		odid, err := common.FromBase58(c.Param("od-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+		orderdetail, err := bizOrderDetail.GetOrderDetail(
+			c.Request.Context(), 
+			map[string]interface{}{"id": int(odid.GetLocalID())},
+		)
 		if err != nil {
 			panic(err)
 		}

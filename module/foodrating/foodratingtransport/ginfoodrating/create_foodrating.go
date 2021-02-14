@@ -19,10 +19,8 @@ func CreateFoodRating(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		// Create foodrating
 		db := appCtx.GetDBConnection()
 		store := foodratingstorage.NewSQLStore(db)
-
 		bizFoodRating := foodratingbusiness.NewCreateFoodRatingBiz(store)
 
 		if err := bizFoodRating.CreateNewFoodRating(c.Request.Context(), &foodrating); err != nil {
