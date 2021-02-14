@@ -7,11 +7,23 @@ import (
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
 )
 
-func (s *sqlStore) ListOrderDetail(ctx context.Context, paging *common.Paging) ([]orderdetailmodel.OrderDetail, error) {
-	db := s.db
+func (s *sqlStore) ListOrderDetail(
+	ctx context.Context, 
+	filter *orderdetailmodel.Filter,
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]orderdetailmodel.OrderDetail, error) {
+
+	db := s.db.Table(orderdetailmodel.OrderDetail{}.TableName())
 	var orderdetails []orderdetailmodel.OrderDetail
 
-	db = db.Table(orderdetailmodel.OrderDetail{}.TableName()).Where("status not in (0)")
+	db = db.Where("status not in (0)")
+
+	if f := filter; f != nil {
+		if f.Price != 0 {
+			db = db.Where("price = ?", f.Price)
+		}
+	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
@@ -25,8 +37,16 @@ func (s *sqlStore) ListOrderDetail(ctx context.Context, paging *common.Paging) (
 		db = db.Offset((paging.Page - 1) * paging.Limit)
 	}
 
-	// id desc
-	if err := db.Order("id asc").Find(&orderdetails).Error; err != nil {
+	if o := order; o != nil {
+		if o.Order == "asc" {
+			db = db.Order("id asc")
+		}
+		if o.Order == "desc" {
+			db = db.Order("id desc")
+		}
+	}
+
+	if err := db.Find(&orderdetails).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 

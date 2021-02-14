@@ -6,12 +6,15 @@ import (
 	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
 )
 
-func (s *sqlStore) FindOrderDetail(ctx context.Context, id int) (*orderdetailmodel.OrderDetail, error) {
-	db := s.db
+func (s *sqlStore) FindOrderDetail(
+	ctx context.Context, 
+	conditions map[string]interface{}, 
+	moreInfo ...string) (*orderdetailmodel.OrderDetail, error) {
+
+	db := s.db.Table(orderdetailmodel.OrderDetail{}.TableName())
 	var orderdetail orderdetailmodel.OrderDetail
 
-	if err := db.Where("id = ?", id).
-		First(&orderdetail).Error; err != nil {
+	if err := db.Where(conditions).First(&orderdetail).Error; err != nil {
 		return nil, err
 	}
 

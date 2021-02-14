@@ -32,7 +32,10 @@ func NewRegisterBusiness(registerStorage RegisterStorage, hasher Hasher) *regist
 }
 
 func (business *registerBusiness) Register(ctx context.Context, data *usermodel.UserCreate) error {
-	user, err := business.registerStorage.FindUser(ctx, map[string]interface{}{"email": data.Email})
+	user, err := business.registerStorage.FindUser(
+		ctx, 
+		map[string]interface{}{"email": data.Email},
+	)
 
 	if user != nil {
 		return common.ErrEntityExisted(usermodel.EntityName, err)

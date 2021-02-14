@@ -1,11 +1,15 @@
 package orderdetailstorage
 
-func (s *sqlStore) DeleteOrderDetail(id int) error {
-	db := s.db
+import (
+	"context"
 
-	if err := db.Table("orderdetails").
-		Where("id = ?", id).
-		Update("status", 0).Error; err != nil {
+	"github.com/imperiustx/go_excercises/module/orderdetail/orderdetailmodel"
+)
+
+func (s *sqlStore) DeleteOrderDetail(ctx context.Context, conditions map[string]interface{}) error {
+	db := s.db.Table(orderdetailmodel.OrderDetail{}.TableName())
+
+	if err := db.Where(conditions).Update("status", 0).Error; err != nil {
 		return err
 	}
 

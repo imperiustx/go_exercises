@@ -9,7 +9,12 @@ import (
 
 // ListOrderDetailStorage list
 type ListOrderDetailStorage interface {
-	ListOrderDetail(ctx context.Context, paging *common.Paging) ([]orderdetailmodel.OrderDetail, error)
+	ListOrderDetail(
+		ctx context.Context,
+		filter *orderdetailmodel.Filter,
+		paging *common.Paging,
+		order *common.OrderSort,
+		moreKeys ...string) ([]orderdetailmodel.OrderDetail, error)
 }
 
 type listOrderDetail struct {
@@ -21,8 +26,14 @@ func NewListOrderDetailBiz(store ListOrderDetailStorage) *listOrderDetail {
 	return &listOrderDetail{store: store}
 }
 
-func (biz *listOrderDetail) ListAllOrderDetail(ctx context.Context, paging *common.Paging) ([]orderdetailmodel.OrderDetail, error) {
-	data, err := biz.store.ListOrderDetail(ctx, paging)
+func (biz *listOrderDetail) ListAllOrderDetail(
+	ctx context.Context,
+	filter *orderdetailmodel.Filter,
+	paging *common.Paging,
+	order *common.OrderSort,
+	moreKeys ...string) ([]orderdetailmodel.OrderDetail, error) {
+
+	data, err := biz.store.ListOrderDetail(ctx, filter, paging, order)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(orderdetailmodel.EntityName, err)
 	}
