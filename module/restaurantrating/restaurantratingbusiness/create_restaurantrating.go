@@ -9,10 +9,10 @@ import (
 
 // CreateRestaurantRatingStorage create
 type CreateRestaurantRatingStorage interface {
-	FindRestaurantRating(
+	FindRestaurantRatingID(
 		ctx context.Context,
-		conditions map[string]interface{},
-		moreInfo ...string) (*restaurantratingmodel.RestaurantRating, error)
+		uid, rid int,
+		moreInfo ...string) (*int, error)
 	CreateRestaurantRating(
 		ctx context.Context,
 		data *restaurantratingmodel.RestaurantRatingCreate) error
@@ -31,8 +31,7 @@ func (biz *createRestaurantRating) CreateNewRestaurantRating(
 	ctx context.Context,
 	data *restaurantratingmodel.RestaurantRatingCreate) error {
 
-	// TODO: think again the condition below
-	rating, err := biz.store.FindRestaurantRating(ctx, map[string]interface{}{"id": data.ID})
+	rating, err := biz.store.FindRestaurantRatingID(ctx, data.UserID, data.RestaurantID)
 	if rating != nil {
 		return common.ErrEntityExisted(restaurantratingmodel.EntityName, err)
 	}

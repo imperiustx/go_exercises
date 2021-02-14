@@ -12,4 +12,5 @@ const (
 	DBTypeOrderDetail
 	DBTypeOrderTracking
 	DBTypeRestaurantRating
+	DBTypeUserDeviceToken
 )
