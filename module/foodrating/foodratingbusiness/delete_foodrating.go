@@ -10,8 +10,13 @@ import (
 
 // DeleteFoodRatingStorage delete
 type DeleteFoodRatingStorage interface {
-	FindFoodRating(ctx context.Context, id int) (*foodratingmodel.FoodRating, error)
-	DeleteFoodRating(id int) error
+	FindFoodRating(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreInfo ...string) (*foodratingmodel.FoodRating, error)
+	DeleteFoodRating(
+		ctx context.Context,
+		conditions map[string]interface{}) error
 }
 
 type deleteFoodRating struct {
@@ -23,8 +28,11 @@ func NewDeleteFoodRatingBiz(store DeleteFoodRatingStorage) *deleteFoodRating {
 	return &deleteFoodRating{store: store}
 }
 
-func (biz *deleteFoodRating) DeleteFoodRating(ctx context.Context, id int) error {
-	foodrating, err := biz.store.FindFoodRating(ctx, id)
+func (biz *deleteFoodRating) DeleteFoodRating(
+	ctx context.Context,
+	conditions map[string]interface{}) error {
+
+	foodrating, err := biz.store.FindFoodRating(ctx, conditions)
 	if err != nil {
 		return common.ErrCannotGetEntity(foodratingmodel.EntityName, err)
 	}
@@ -33,7 +41,7 @@ func (biz *deleteFoodRating) DeleteFoodRating(ctx context.Context, id int) error
 		return common.ErrCannotGetEntity(foodratingmodel.EntityName, errors.New("foodrating not found"))
 	}
 
-	if err := biz.store.DeleteFoodRating(id); err != nil {
+	if err := biz.store.DeleteFoodRating(ctx, conditions); err != nil {
 		return err
 	}
 
