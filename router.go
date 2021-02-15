@@ -18,6 +18,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurantfood/restaurantfoodtransport/ginrestaurantfood"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"github.com/imperiustx/go_excercises/module/restaurantrating/restaurantratingtransport/ginrestaurantrating"
+	"github.com/imperiustx/go_excercises/module/upload/uploadtransport/ginupload"
 	"github.com/imperiustx/go_excercises/module/user/usertransport/ginuser"
 	"github.com/imperiustx/go_excercises/module/useraddress/useraddresstransport/ginuseraddress"
 	"github.com/imperiustx/go_excercises/module/userdevicetoken/userdevicetokentransport/ginuserdevicetoken"
@@ -30,6 +31,9 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 
 	v1.POST("/register", ginuser.Register(appCtx))
 	v1.POST("/login", ginuser.Login(appCtx))
+
+	v1.POST("/upload", ginupload.Upload(appCtx))
+	// v1.GET("/profile", middleware.RequiredAuth(appCtx), ginuser.GetProfile(appCtx))
 
 	users := v1.Group("/users", middleware.RequiredAuth(appCtx))
 	{
@@ -175,6 +179,8 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		carts.PUT("/:u-id/:f-id", gincart.Update(appCtx))
 		carts.DELETE("/:u-id/:f-id", gincart.Delete(appCtx))
 	}
+
+	r.Static("/upload", "./static") // Use this for upload files in local server
 }
 
 func setupAdminRouter(r *gin.Engine, appCtx appctx.AppContext) {
