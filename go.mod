@@ -3,6 +3,7 @@ module github.com/imperiustx/go_excercises
 go 1.15
 
 require (
+	github.com/aws/aws-sdk-go v1.37.10
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
