@@ -30,11 +30,15 @@ func ListCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := categorystorage.NewSQLStore(db)
 		bizCategory := categorybusiness.NewListCategoryBiz(store)
 
-		categorys, err := bizCategory.ListAllCategory(c.Request.Context(), &paging, &order)
+		categories, err := bizCategory.ListAllCategory(c.Request.Context(), &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		c.JSON(http.StatusOK, common.NewSuccessResponse(categorys, paging, nil))
+		for i := range categories {
+			categories[i].GenUID(common.DBTypeCategory, 1)
+		}
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(categories, paging, nil))
 	}
 }

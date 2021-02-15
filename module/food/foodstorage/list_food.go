@@ -8,15 +8,28 @@ import (
 )
 
 func (s *sqlStore) ListFood(
-	ctx context.Context, 
+	ctx context.Context,
+	filter *foodmodel.Filter,
 	paging *common.Paging,
 	order *common.OrderSort,
 	moreKeys ...string) ([]foodmodel.Food, error) {
 
-	db := s.db.Table(foodmodel.Food{}.TableName())
 	var foods []foodmodel.Food
+	db := s.db.Table(foodmodel.Food{}.TableName())
 
 	db = db.Where("status not in (0)")
+
+	if f := filter; f != nil {
+		if f.RestaurantID != 0 {
+			db = db.Where("restaurant_id = ?", f.RestaurantID)
+		}
+		if f.CategoryID != 0 {
+			db = db.Where("category_id = ?", f.CategoryID)
+		}
+		if f.Price != 0 {
+			db = db.Where("price = ?", f.Price)
+		}
+	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)

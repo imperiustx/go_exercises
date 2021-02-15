@@ -26,6 +26,7 @@ func CreateFoodRating(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err := bizFoodRating.CreateNewFoodRating(c.Request.Context(), &foodrating); err != nil {
 			panic(err)
 		}
+		
 		foodrating.GenUID(common.DBTypeFoodRating, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(foodrating.FakeID))

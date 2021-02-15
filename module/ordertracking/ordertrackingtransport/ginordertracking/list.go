@@ -14,26 +14,31 @@ import (
 func ListOrderTracking(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			paging        common.Paging
-			ordertracking common.OrderSort
+			paging common.Paging
+			order  common.OrderSort
 		)
 		if err := c.ShouldBind(&paging); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-		if err := c.ShouldBind(&ordertracking); err != nil {
+		if err := c.ShouldBind(&order); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
+
 		paging.Fulfill()
 
 		db := appCtx.GetDBConnection()
 		store := ordertrackingstorage.NewSQLStore(db)
-		// requester := c.MustGet(common.CurrentUser).(common.Requester)
 		bizOrderTracking := ordertrackingbusiness.NewListOrderTrackingBiz(store)
-		ordertrackings, err := bizOrderTracking.ListAllOrderTracking(c.Request.Context(), &paging, &ordertracking)
+
+		orderTrackings, err := bizOrderTracking.ListAllOrderTracking(c.Request.Context(), &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		c.JSON(http.StatusOK, common.NewSuccessResponse(ordertrackings, paging, nil))
+		for i := range orderTrackings {
+			orderTrackings[i].GenUID(common.DBTypeOrderTracking, 1)
+		}
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(orderTrackings, paging, nil))
 	}
 }

@@ -31,6 +31,8 @@ func GetFoodRating(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
+		foodrating.GenUID(common.DBTypeFoodRating, 1)
+
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(foodrating))
 	}
 }

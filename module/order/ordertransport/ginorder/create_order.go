@@ -19,15 +19,14 @@ func CreateOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		// Create order
 		db := appCtx.GetDBConnection()
 		store := orderstorage.NewSQLStore(db)
-
 		bizOrder := orderbusiness.NewCreateOrderBiz(store)
 
 		if err := bizOrder.CreateNewOrder(c.Request.Context(), &order); err != nil {
 			panic(err)
 		}
+		
 		order.GenUID(common.DBTypeOrder, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(order.FakeID))

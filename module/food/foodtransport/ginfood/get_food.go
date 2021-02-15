@@ -24,12 +24,14 @@ func GetFood(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		food, err := bizFood.GetFood(
-			c.Request.Context(), 
+			c.Request.Context(),
 			map[string]interface{}{"id": int(fid.GetLocalID())},
 		)
 		if err != nil {
 			panic(err)
 		}
+
+		food.GenUID(common.DBTypeFood, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(food))
 	}

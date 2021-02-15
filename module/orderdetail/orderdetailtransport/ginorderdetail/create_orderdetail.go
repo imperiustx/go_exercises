@@ -26,6 +26,7 @@ func CreateOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err := bizOrderDetail.CreateNewOrderDetail(c.Request.Context(), &orderdetail); err != nil {
 			panic(err)
 		}
+		
 		orderdetail.GenUID(common.DBTypeOrderDetail, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(orderdetail.FakeID))

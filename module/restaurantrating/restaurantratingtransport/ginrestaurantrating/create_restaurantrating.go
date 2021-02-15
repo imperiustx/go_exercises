@@ -30,6 +30,8 @@ func CreateRestaurantRating(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
+		restaurantrating.GenUID(common.DBTypeRestaurantRating, 1)
+
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(restaurantrating.FakeID))
 	}
 }

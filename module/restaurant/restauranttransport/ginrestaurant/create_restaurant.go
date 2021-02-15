@@ -27,6 +27,8 @@ func CreateRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
+		restaurant.GenUID(common.DBTypeRestaurant, 1)
+
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(restaurant.FakeID))
 	}
 }

@@ -21,12 +21,12 @@ func CreateUserAddress(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := useraddressstorage.NewSQLStore(db)
-
 		bizUserAddress := useraddressbusiness.NewCreateUserAddressBiz(store)
 
 		if err := bizUserAddress.CreateNewUserAddress(c.Request.Context(), &useraddress); err != nil {
 			panic(err)
 		}
+		
 		useraddress.GenUID(common.DBTypeUserAddress, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(useraddress.FakeID))

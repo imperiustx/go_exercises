@@ -27,6 +27,8 @@ func Create(appCtx appctx.AppContext) func(*gin.Context) {
 			panic(err)
 		}
 
+		data.GenUID(common.DBTypeUserDeviceToken, 1)
+
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(data.ID))
 	}
 }
