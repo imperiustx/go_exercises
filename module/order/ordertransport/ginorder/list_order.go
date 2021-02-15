@@ -27,11 +27,15 @@ func ListOrder(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := orderstorage.NewSQLStore(db)
-		// requester := c.MustGet(common.CurrentUser).(common.Requester)
 		bizOrder := orderbusiness.NewListOrderBiz(store)
+
 		orders, err := bizOrder.ListAllOrder(c.Request.Context(), &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
+		}
+
+		for i := range orders {
+			orders[i].GenUID(common.DBTypeOrder, 1)
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(orders, paging, nil))

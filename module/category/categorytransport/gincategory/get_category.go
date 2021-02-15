@@ -18,7 +18,7 @@ func GetCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := categorystorage.NewSQLStore(db)
 		bizCategory := categorybusiness.NewGetCategoryBiz(store)
 
-		cid, err := common.FromBase58(c.Param("user-id"))
+		cid, err := common.FromBase58(c.Param("cat-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
@@ -30,6 +30,8 @@ func GetCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err != nil {
 			panic(err)
 		}
+
+		category.GenUID(common.DBTypeCategory, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(category))
 	}

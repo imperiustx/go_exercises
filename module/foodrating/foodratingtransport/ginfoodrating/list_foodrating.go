@@ -33,13 +33,17 @@ func ListFoodRating(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := foodratingstorage.NewSQLStore(db)
-
 		bizFoodRating := foodratingbusiness.NewListFoodRatingBiz(store)
-		foodratings, err := bizFoodRating.ListAllFoodRating(c.Request.Context(), &filter, &paging, &order)
+
+		foodRatings, err := bizFoodRating.ListAllFoodRating(c.Request.Context(), &filter, &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		c.JSON(http.StatusOK, common.NewSuccessResponse(foodratings, paging, nil))
+		for i := range foodRatings {
+			foodRatings[i].GenUID(common.DBTypeFoodRating, 1)
+		}
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(foodRatings, paging, nil))
 	}
 }

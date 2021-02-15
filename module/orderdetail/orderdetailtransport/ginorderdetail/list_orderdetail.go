@@ -28,17 +28,22 @@ func ListOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err := c.ShouldBind(&order); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
+		
 		paging.Fulfill()
 
 		db := appCtx.GetDBConnection()
 		store := orderdetailstorage.NewSQLStore(db)
 		bizOrderDetail := orderdetailbusiness.NewListOrderDetailBiz(store)
 
-		orderdetails, err := bizOrderDetail.ListAllOrderDetail(c.Request.Context(), &filter, &paging, &order)
+		orderDetails, err := bizOrderDetail.ListAllOrderDetail(c.Request.Context(), &filter, &paging, &order)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		c.JSON(http.StatusOK, common.NewSuccessResponse(orderdetails, paging, nil))
+		for i := range orderDetails {
+			orderDetails[i].GenUID(common.DBTypeOrderDetail, 1)
+		}
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(orderDetails, paging, nil))
 	}
 }

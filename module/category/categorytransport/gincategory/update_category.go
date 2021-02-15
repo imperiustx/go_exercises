@@ -24,7 +24,7 @@ func UpdateCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := categorystorage.NewSQLStore(db)
 		bizCategory := categorybusiness.NewUpdateCategoryBiz(store)
 
-		cid, err := common.FromBase58(c.Param("user-id"))
+		cid, err := common.FromBase58(c.Param("cat-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

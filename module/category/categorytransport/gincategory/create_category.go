@@ -19,15 +19,14 @@ func CreateCategory(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		// Create category
 		db := appCtx.GetDBConnection()
 		store := categorystorage.NewSQLStore(db)
-
 		bizCategory := categorybusiness.NewCreateCategoryBiz(store)
 
 		if err := bizCategory.CreateNewCategory(c.Request.Context(), &category); err != nil {
 			panic(err)
 		}
+		
 		category.GenUID(common.DBTypeCategory, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(category.FakeID))
