@@ -8,13 +8,13 @@ import (
 )
 
 func (s *sqlStore) ListCategory(
-	ctx context.Context, 
+	ctx context.Context,
 	paging *common.Paging,
 	order *common.OrderSort,
 	moreKeys ...string) ([]categorymodel.Category, error) {
 
 	db := s.db.Table(categorymodel.Category{}.TableName())
-	var categorys []categorymodel.Category
+	var categories []categorymodel.Category
 
 	db = db.Where("status not in (0)")
 
@@ -43,9 +43,9 @@ func (s *sqlStore) ListCategory(
 		}
 	}
 
-	if err := db.Find(&categorys).Error; err != nil {
+	if err := db.Find(&categories).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
-	return categorys, nil
+	return categories, nil
 }

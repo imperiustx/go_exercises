@@ -135,6 +135,7 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		categories.GET("/:cat-id", gincategory.GetCategory(appCtx))
 		categories.PUT("/:cat-id", gincategory.UpdateCategory(appCtx))
 		categories.DELETE("/:cat-id", gincategory.DeleteCategory(appCtx))
+		categories.GET("/:cat-id/foods", gincategory.ListFood(appCtx))
 	}
 
 	orders := v1.Group("/orders")
