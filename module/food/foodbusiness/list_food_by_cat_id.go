@@ -1,4 +1,4 @@
-package categorybusiness
+package foodbusiness
 
 import (
 	"context"
