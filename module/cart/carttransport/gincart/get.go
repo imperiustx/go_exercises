@@ -11,7 +11,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/cart/cartstorage"
 )
 
-func GetProfile(appCtx appctx.AppContext) func(c *gin.Context) {
+func Get(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		uidString := c.Param("u-id")
 		uid, err := strconv.Atoi(uidString)

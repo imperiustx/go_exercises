@@ -38,7 +38,7 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	users := v1.Group("/users", middleware.RequiredAuth(appCtx))
 	{
 		users.GET("", ginuser.List(appCtx))
-		users.GET("/:user-id", ginuser.GetProfile(appCtx))
+		users.GET("/profile/:user-id", ginuser.GetProfile(appCtx))
 		users.PUT("/:user-id", ginuser.Update(appCtx))
 		users.DELETE("/:user-id", ginuser.Delete(appCtx))
 	}
@@ -89,9 +89,11 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		foods.POST("", ginfood.CreateFood(appCtx))
 		foods.GET("", ginfood.ListFood(appCtx))
-		foods.GET("/:food-id", ginfood.GetFood(appCtx))
+		foods.GET("/profile/:food-id", ginfood.GetFood(appCtx))
 		foods.PUT("/:food-id", ginfood.UpdateFood(appCtx))
 		foods.DELETE("/:food-id", ginfood.DeleteFood(appCtx))
+		foods.GET("/cat-id/:cat-id", ginfood.ListFoodByCategoryID(appCtx))
+		foods.GET("/res-id/:res-id", ginfood.ListFoodByRestaurantID(appCtx))
 	}
 
 	foodlikes := v1.Group("/food-likes")
@@ -135,7 +137,6 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 		categories.GET("/:cat-id", gincategory.GetCategory(appCtx))
 		categories.PUT("/:cat-id", gincategory.UpdateCategory(appCtx))
 		categories.DELETE("/:cat-id", gincategory.DeleteCategory(appCtx))
-		categories.GET("/:cat-id/foods", gincategory.ListFood(appCtx))
 	}
 
 	orders := v1.Group("/orders")
@@ -176,7 +177,7 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	{
 		carts.POST("", gincart.Create(appCtx))
 		carts.GET("", gincart.List(appCtx))
-		carts.GET("/:u-id/:f-id", gincart.GetProfile(appCtx))
+		carts.GET("/:u-id/:f-id", gincart.Get(appCtx))
 		carts.PUT("/:u-id/:f-id", gincart.Update(appCtx))
 		carts.DELETE("/:u-id/:f-id", gincart.Delete(appCtx))
 	}

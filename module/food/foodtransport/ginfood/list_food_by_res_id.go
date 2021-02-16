@@ -1,17 +1,16 @@
-package gincategory
+package ginfood
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
 	"github.com/imperiustx/go_excercises/common"
-	"github.com/imperiustx/go_excercises/module/category/categorybusiness"
-	"github.com/imperiustx/go_excercises/module/category/categorystorage"
+	"github.com/imperiustx/go_excercises/module/food/foodbusiness"
+	"github.com/imperiustx/go_excercises/module/food/foodstorage"
 )
 
-func ListFood(appCtx appctx.AppContext) func(c *gin.Context) {
+func ListFoodByRestaurantID(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			paging common.Paging
@@ -27,16 +26,20 @@ func ListFood(appCtx appctx.AppContext) func(c *gin.Context) {
 		paging.Fulfill()
 
 		db := appCtx.GetDBConnection()
-		store := categorystorage.NewSQLStore(db)
-		bizCategory := categorybusiness.NewListFoodByCategoryIDBiz(store)
+		store := foodstorage.NewSQLStore(db)
+		bizRestaurant := foodbusiness.NewListFoodByRestaurantIDBiz(store)
 
-		cidString := c.Param("cat-id")
-		cid, err := strconv.Atoi(cidString)
+		rid, err := common.FromBase58(c.Param("res-id"))
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		foods, err := bizCategory.ListAllFoodByCategoryID(c.Request.Context(), cid, &paging, &order)
+		foods, err := bizRestaurant.ListAllFoodByRestaurantID(
+			c.Request.Context(),
+			int(rid.GetLocalID()),
+			&paging,
+			&order,
+		)
 		if err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

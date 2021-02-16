@@ -1,4 +1,4 @@
-package categorystorage
+package foodstorage
 
 import (
 	"context"
@@ -15,13 +15,7 @@ func (s *sqlStore) ListFoodByCategoryID(
 	order *common.OrderSort,
 	moreKeys ...string) ([]foodmodel.Food, error) {
 
-	// SELECT foods.id, foods.name, foods.price, categories.name
-	// FROM `food_delivery`.`categories`
-	// LEFT JOIN foods ON foods.category_id = categories.id
-	// WHERE categories.id = 6;
-
 	db := s.db.Table(categorymodel.Category{}.TableName())
-	var results []foodmodel.Food
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
@@ -48,9 +42,11 @@ func (s *sqlStore) ListFoodByCategoryID(
 		}
 	}
 
+	var results []foodmodel.Food
+
 	if err := db.
 		Select("f.id, f.restaurant_id, f.category_id, f.name, f.description, f.price, f.images, f.status, f.created_at, f.updated_at").
-		Joins("left join foods as f on f.category_id = categories.id").
+		Joins("LEFT JOIN foods AS f ON f.category_id = categories.id").
 		Where("categories.id = ?", id).Scan(&results).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
