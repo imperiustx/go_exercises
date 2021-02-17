@@ -35,7 +35,7 @@ func ListRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		for i := range restaurants {
-			restaurants[i].GenUID(common.DBTypeRestaurant, 1)
+			restaurants[i].GenUID(common.DBTypeRestaurant, common.DBTypeUser, 1)
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(restaurants, paging, nil))
