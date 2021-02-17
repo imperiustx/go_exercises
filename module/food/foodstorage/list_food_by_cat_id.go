@@ -17,6 +17,15 @@ func (s *sqlStore) ListFoodByCategoryID(
 
 	db := s.db.Table(categorymodel.Category{}.TableName())
 
+	var results []foodmodel.Food
+
+	if err := db.
+		Select("f.id, f.restaurant_id, f.category_id, f.name, f.description, f.price, f.images, f.status, f.created_at, f.updated_at").
+		Joins("LEFT JOIN foods AS f ON f.category_id = categories.id").
+		Where("categories.id = ?", id).Scan(&results).Error; err != nil {
+		return nil, common.ErrDB(err)
+	}
+
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
@@ -40,15 +49,6 @@ func (s *sqlStore) ListFoodByCategoryID(
 		if o.Order == "desc" {
 			db = db.Order("id desc")
 		}
-	}
-
-	var results []foodmodel.Food
-
-	if err := db.
-		Select("f.id, f.restaurant_id, f.category_id, f.name, f.description, f.price, f.images, f.status, f.created_at, f.updated_at").
-		Joins("LEFT JOIN foods AS f ON f.category_id = categories.id").
-		Where("categories.id = ?", id).Scan(&results).Error; err != nil {
-		return nil, common.ErrDB(err)
 	}
 
 	return results, nil

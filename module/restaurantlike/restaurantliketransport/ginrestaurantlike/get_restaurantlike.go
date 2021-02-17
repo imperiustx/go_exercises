@@ -33,10 +33,11 @@ func GetRestaurantLike(appCtx appctx.AppContext) func(c *gin.Context) {
 			int(uid.GetLocalID()),
 			int(rid.GetLocalID()),
 		)
-
 		if err != nil {
 			panic(err)
 		}
+
+		restaurantlike.GenUID(common.DBTypeUser, common.DBTypeRestaurant, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(restaurantlike))
 	}

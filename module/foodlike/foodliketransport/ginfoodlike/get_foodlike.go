@@ -28,13 +28,16 @@ func GetFoodLike(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(common.ErrInvalidRequest(err))
 		}
 
-		foodlike, err := bizFoodLike.GetFoodLike(c.Request.Context(),
+		foodlike, err := bizFoodLike.GetFoodLike(
+			c.Request.Context(),
 			int(uid.GetLocalID()),
 			int(fid.GetLocalID()),
 		)
 		if err != nil {
 			panic(err)
 		}
+
+		foodlike.GenUID(common.DBTypeUser, common.DBTypeFood, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(foodlike))
 	}

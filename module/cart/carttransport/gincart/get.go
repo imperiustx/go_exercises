@@ -36,6 +36,8 @@ func Get(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
+		cart.GenUID(common.DBTypeUser, common.DBTypeFood, 1)
+
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(cart))
 	}
 }
