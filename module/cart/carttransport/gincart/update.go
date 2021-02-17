@@ -2,7 +2,6 @@ package gincart
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -21,22 +20,25 @@ func Update(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		db := appCtx.GetDBConnection()
-		uidString := c.Param("u-id")
-		uid, err := strconv.Atoi(uidString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
-
-		fidString := c.Param("f-id")
-		fid, err := strconv.Atoi(fidString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
-
 		store := cartstorage.NewSQLStore(db)
 		bizCart := cartbusiness.NewUpdateCartBiz(store)
 
-		if err := bizCart.UpdateCart(c.Request.Context(), uid, fid, &cart); err != nil {
+		uid, err := common.FromBase58(c.Param("u-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		fid, err := common.FromBase58(c.Param("f-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		if err := bizCart.UpdateCart(
+			c.Request.Context(),
+			int(uid.GetLocalID()),
+			int(fid.GetLocalID()),
+			&cart,
+		); err != nil {
 			panic(err)
 		}
 

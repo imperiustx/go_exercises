@@ -17,24 +17,18 @@ type ListCartStorage interface {
 
 type listCart struct {
 	store     ListCartStorage
-	// requester common.Requester
 }
 
 // NewListCartBiz list
 func NewListCartBiz(store ListCartStorage) *listCart {
 	return &listCart{
 		store:     store,
-		// requester: requester,
 	}
 }
 
 func (biz *listCart) ListAllCart(
 	ctx context.Context,
 	paging *common.Paging) ([]cartmodel.Cart, error) {
-
-	// if biz.requester.GetRole() != "admin" {
-	// 	return []cartmodel.Cart{}, common.ErrNoPermission(nil)
-	// }
 
 	data, err := biz.store.ListCart(ctx, paging)
 	if err != nil {

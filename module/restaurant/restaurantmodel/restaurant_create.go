@@ -4,7 +4,7 @@ import "github.com/imperiustx/go_excercises/common"
 
 type RestaurantCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	OwnerID               int           `json:"owner_id"`
+	OwnerID               string        `json:"owner_id"`
 	Name                  string        `json:"name"`
 	Addr                  string        `json:"addr"`
 	CityID                int           `json:"city_id"`

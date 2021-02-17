@@ -2,6 +2,7 @@ package restaurantlikestorage
 
 import (
 	"context"
+	"errors"
 
 	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
@@ -18,7 +19,10 @@ func (s *sqlStore) ListRestaurantLike(
 	var restaurantlikes []restaurantlikemodel.RestaurantLike
 
 	switch {
-	case filter.RestaurantID != 0:
+	case filter.RestaurantID != "" && filter.UserID != "":
+		return nil, common.ErrCannotList(errors.New("Both restaurant_id and user_id is chosen"))
+		
+	case filter.RestaurantID != "":
 		db = db.Where("restaurant_id = ?", filter.RestaurantID)
 
 		if paging.Cursor > 0 {
@@ -36,7 +40,7 @@ func (s *sqlStore) ListRestaurantLike(
 			}
 		}
 
-	case filter.UserID != 0:
+	case filter.UserID != "":
 		db = db.Where("user_id = ?", filter.UserID)
 		if paging.Cursor > 0 {
 			db = db.Where("user_id < ?", paging.Cursor)

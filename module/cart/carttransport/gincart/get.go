@@ -2,7 +2,6 @@ package gincart
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,30 +12,31 @@ import (
 
 func Get(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		uidString := c.Param("u-id")
-		uid, err := strconv.Atoi(uidString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
-
-		fidString := c.Param("f-id")
-		fid, err := strconv.Atoi(fidString)
-		if err != nil {
-			panic(common.ErrInvalidRequest(err))
-		}
 
 		db := appCtx.GetDBConnection()
 		store := cartstorage.NewSQLStore(db)
 		bizCart := cartbusiness.NewGetCartBiz(store)
 
+		uid, err := common.FromBase58(c.Param("u-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		fid, err := common.FromBase58(c.Param("f-id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
 		cart, err := bizCart.GetCart(
 			c.Request.Context(),
-			uid,
-			fid,
+			int(uid.GetLocalID()),
+			int(fid.GetLocalID()),
 		)
 		if err != nil {
 			panic(err)
 		}
+
+		cart.GenUID(common.DBTypeUser, common.DBTypeFood, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(cart))
 	}

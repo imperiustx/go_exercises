@@ -2,6 +2,7 @@ package gincart
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -13,20 +14,38 @@ import (
 
 func Create(appCtx appctx.AppContext) func(*gin.Context) {
 	return func(c *gin.Context) {
-		db := appCtx.GetDBConnection()
+
 		var data cartmodel.CartCreate
 
 		if err := c.ShouldBind(&data); err != nil {
 			panic(err)
 		}
 
+		db := appCtx.GetDBConnection()
 		store := cartstorage.NewSQLStore(db)
 		repo := cartbusiness.NewCreateBusiness(store)
+
+		uid, err := common.FromBase58(data.UserID)
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+		fid, err := common.FromBase58(data.FoodID)
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		data.FoodID = strconv.Itoa(int(fid.GetLocalID()))
+		data.UserID = strconv.Itoa(int(uid.GetLocalID()))
 
 		if err := repo.Create(c.Request.Context(), &data); err != nil {
 			panic(err)
 		}
 
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(data))
+		c.JSON(
+			http.StatusCreated,
+			common.SimpleSuccessResponse(
+				map[string]string{"data": "success"},
+			),
+		)
 	}
 }

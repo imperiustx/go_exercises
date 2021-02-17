@@ -8,10 +8,6 @@ import (
 )
 
 type CreateStorage interface {
-	// FindCart(
-	// 	ctx context.Context,
-	// 	uid, fid int,
-	// 	moreInfo ...string) (*cartmodel.Cart, error)
 	CreateCart(ctx context.Context, data *cartmodel.CartCreate) error
 }
 
@@ -26,11 +22,6 @@ func NewCreateBusiness(createStorage CreateStorage) *createBusiness {
 }
 
 func (business *createBusiness) Create(ctx context.Context, data *cartmodel.CartCreate) error {
-	// cart, err := business.createStorage.FindCart(ctx, data.UserID, data.FoodID)
-
-	// if cart != nil {
-	// 	return common.ErrEntityExisted(cartmodel.EntityName, err)
-	// }
 
 	if err := business.createStorage.CreateCart(ctx, data); err != nil {
 		return common.ErrCannotCreateEntity(cartmodel.EntityName, err)

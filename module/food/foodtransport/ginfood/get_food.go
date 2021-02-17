@@ -31,7 +31,7 @@ func GetFood(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
-		food.GenUID(common.DBTypeFood, 1)
+		food.GenUID(common.DBTypeFood, common.DBTypeRestaurant, common.DBTypeCategory, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(food))
 	}

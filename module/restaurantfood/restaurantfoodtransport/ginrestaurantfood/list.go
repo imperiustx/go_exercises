@@ -38,6 +38,10 @@ func ListRestaurantFood(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(common.ErrInvalidRequest(err))
 		}
 
+		for i := range restaurantfoods {
+			restaurantfoods[i].GenUID(common.DBTypeRestaurant, common.DBTypeFood, 1)
+		}
+
 		c.JSON(http.StatusOK, common.NewSuccessResponse(restaurantfoods, paging, nil))
 	}
 }

@@ -29,7 +29,7 @@ func GetRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
-		restaurant.GenUID(common.DBTypeRestaurant, 1)
+		restaurant.GenUID(common.DBTypeRestaurant, common.DBTypeUser, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(restaurant))
 	}

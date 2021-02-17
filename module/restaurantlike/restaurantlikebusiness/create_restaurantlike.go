@@ -2,6 +2,7 @@ package restaurantlikebusiness
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/restaurantlike/restaurantlikemodel"
@@ -31,11 +32,20 @@ func (biz *createRestaurantLike) CreateNewRestaurantLike(
 	ctx context.Context,
 	data *restaurantlikemodel.RestaurantLikeCreate) error {
 
-	like, err := biz.store.FindRestaurantLike(ctx, data.UserID, data.RestaurantID)
+	uid, err := strconv.Atoi(data.UserID)
+	if err != nil {
+		return common.ErrCannotConvertGivenData(data.UserID, err)
+	}
+	rid, err := strconv.Atoi(data.RestaurantID)
+	if err != nil {
+		return common.ErrCannotConvertGivenData(data.RestaurantID, err)
+	}
+
+	like, err := biz.store.FindRestaurantLike(ctx, uid, rid)
 	if like != nil {
 		return common.ErrEntityExisted(restaurantlikemodel.EntityName, err)
 	}
-	
+
 	if err := biz.store.CreateRestaurantLike(ctx, data); err != nil {
 		return common.ErrCannotCreateEntity(restaurantlikemodel.EntityName, err)
 	}
