@@ -2,6 +2,7 @@ package foodlikebusiness
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/foodlike/foodlikemodel"
@@ -31,7 +32,16 @@ func (biz *createFoodLike) CreateNewFoodLike(
 	ctx context.Context,
 	data *foodlikemodel.FoodLikeCreate) error {
 
-	like, err := biz.store.FindFoodLike(ctx, data.UserID, data.FoodID)
+	uid, err := strconv.Atoi(data.UserID)
+	if err != nil {
+		return common.ErrCannotConvertGivenData(data.UserID, err)
+	}
+	fid, err := strconv.Atoi(data.FoodID)
+	if err != nil {
+		return common.ErrCannotConvertGivenData(data.FoodID, err)
+	}
+
+	like, err := biz.store.FindFoodLike(ctx, uid, fid)
 	if like != nil {
 		return common.ErrEntityExisted(foodlikemodel.EntityName, err)
 	}

@@ -11,7 +11,7 @@ type Cart struct {
 	UserID    int        `json:"user_id"`
 	FoodID    int        `json:"food_id"`
 	Quantity  int        `json:"quantity"`
-	Status    int        `json:"status"`
+	Status    int        `json:"status" gorm:"default:1"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }

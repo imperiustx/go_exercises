@@ -2,6 +2,7 @@ package foodlikestorage
 
 import (
 	"context"
+	"errors"
 
 	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/foodlike/foodlikemodel"
@@ -18,7 +19,10 @@ func (s *sqlStore) ListFoodLike(
 	var foodlikes []foodlikemodel.FoodLike
 
 	switch {
-	case filter.FoodID != 0:
+	case filter.FoodID != "" && filter.UserID != "":
+		return nil, common.ErrCannotList(errors.New("Both food_id and user_id is chosen"))
+
+	case filter.FoodID != "":
 		db = db.Where("food_id = ?", filter.FoodID)
 
 		if paging.Cursor > 0 {
@@ -35,7 +39,8 @@ func (s *sqlStore) ListFoodLike(
 				db = db.Order("food_id desc")
 			}
 		}
-	case filter.UserID != 0:
+
+	case filter.UserID != "":
 		db = db.Where("user_id = ?", filter.UserID)
 
 		if paging.Cursor > 0 {

@@ -2,6 +2,7 @@ package restaurantfoodbusiness
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/restaurantfood/restaurantfoodmodel"
@@ -31,7 +32,16 @@ func (biz *createRestaurantFood) CreateNewRestaurantFood(
 	ctx context.Context,
 	data *restaurantfoodmodel.RestaurantFoodCreate) error {
 
-	restaurantfood, err := biz.store.FindRestaurantFood(ctx, data.RestaurantID, data.FoodID)
+	fid, err := strconv.Atoi(data.FoodID)
+	if err != nil {
+		return common.ErrCannotConvertGivenData(data.FoodID, err)
+	}
+	rid, err := strconv.Atoi(data.RestaurantID)
+	if err != nil {
+		return common.ErrCannotConvertGivenData(data.RestaurantID, err)
+	}
+
+	restaurantfood, err := biz.store.FindRestaurantFood(ctx, rid, fid)
 
 	if restaurantfood != nil {
 		return common.ErrEntityExisted(restaurantfoodmodel.EntityName, err)

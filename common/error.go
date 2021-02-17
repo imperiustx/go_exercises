@@ -88,3 +88,19 @@ func ErrCannotSignInByEmail(email string, err error) *AppError {
 		"ErrCannotSignInByEmail",
 	)
 }
+
+func ErrCannotList(err error) *AppError {
+	return NewCustomError(
+		err,
+		"You can ONLY choose ONE ID",
+		"ErrCannotList",
+	)
+}
+
+func ErrCannotConvertGivenData(data interface{}, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Cannot convert %v, check your data again", data),
+		"ErrCannotConvertGivenData",
+	)
+}

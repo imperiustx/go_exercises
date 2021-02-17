@@ -1,8 +1,8 @@
 package foodlikemodel
 
 type FoodLikeCreate struct {
-	UserID int `json:"user_id"`
-	FoodID int `json:"food_id"`
+	UserID string `json:"user_id"`
+	FoodID string `json:"food_id"`
 }
 
 func (FoodLikeCreate) TableName() string {
