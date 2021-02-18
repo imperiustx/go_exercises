@@ -4,7 +4,7 @@ import "github.com/imperiustx/go_excercises/common"
 
 type OrderDetailCreate struct {
 	common.SQLModelCreate `json:",inline"`
-	OrderID               int           `json:"order_id"`
+	OrderID               string        `json:"order_id"`
 	FoodOrigin            *common.Image `json:"food_origin"`
 	Price                 float64       `json:"price"`
 	Quantity              int           `json:"quantity"`

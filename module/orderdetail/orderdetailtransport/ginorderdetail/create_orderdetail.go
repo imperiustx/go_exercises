@@ -2,6 +2,7 @@ package ginorderdetail
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
@@ -23,10 +24,17 @@ func CreateOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 		store := orderdetailstorage.NewSQLStore(db)
 		bizOrderDetail := orderdetailbusiness.NewCreateOrderDetailBiz(store)
 
+		oid, err := common.FromBase58(orderdetail.OrderID)
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		orderdetail.OrderID = strconv.Itoa(int(oid.GetLocalID()))
+
 		if err := bizOrderDetail.CreateNewOrderDetail(c.Request.Context(), &orderdetail); err != nil {
 			panic(err)
 		}
-		
+
 		orderdetail.GenUID(common.DBTypeOrderDetail, 1)
 
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(orderdetail.FakeID))

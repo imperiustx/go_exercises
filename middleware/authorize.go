@@ -2,22 +2,21 @@ package middleware
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imperiustx/go_excercises/appctx"
-	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/appctx/tokenprovider/jwt"
+	"github.com/imperiustx/go_excercises/common"
 	"github.com/imperiustx/go_excercises/module/user/userstorage"
 )
 
 func ErrWrongAuthHeader(err error) *common.AppError {
 	return common.NewCustomError(
 		err,
-		fmt.Sprintf("wrong authen header"),
-		fmt.Sprintf("ErrWrongAuthHeader"),
+		"wrong authen header",
+		"ErrWrongAuthHeader",
 	)
 }
 

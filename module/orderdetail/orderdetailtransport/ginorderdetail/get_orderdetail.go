@@ -30,7 +30,7 @@ func GetOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
-		orderdetail.GenUID(common.DBTypeOrderDetail, 1)
+		orderdetail.GenUID(common.DBTypeOrderDetail, common.DBTypeOrder, 1)
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(orderdetail))
 	}

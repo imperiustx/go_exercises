@@ -33,7 +33,6 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	v1.POST("/login", ginuser.Login(appCtx))
 
 	v1.POST("/upload", ginupload.Upload(appCtx))
-	// v1.GET("/profile", middleware.RequiredAuth(appCtx), ginuser.GetProfile(appCtx))
 
 	users := v1.Group("/users", middleware.RequiredAuth(appCtx))
 	{
@@ -183,9 +182,4 @@ func setupRouter(r *gin.Engine, appCtx appctx.AppContext) {
 	}
 
 	r.Static("/upload", "./static") // Use this for upload files in local server
-}
-
-func setupAdminRouter(r *gin.Engine, appCtx appctx.AppContext) {
-	r.Use(middleware.Recover(appCtx))
-	//admin := r.Group("/v1/admin")
 }

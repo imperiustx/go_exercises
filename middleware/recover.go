@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +19,7 @@ func Recover(appCtx appctx.AppContext) gin.HandlerFunc {
 					panic(err)
 				}
 
-				appErr := common.ErrInternal(errors.New(fmt.Sprintf("%v", err)))
+				appErr := common.ErrInternal(fmt.Errorf("%v", err))
 				c.AbortWithStatusJSON(appErr.StatusCode, appErr)
 				panic(err)
 			}
