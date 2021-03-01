@@ -9,7 +9,8 @@ type FoodCreate struct {
 	Name                  string         `json:"name"`
 	Description           string         `json:"description"`
 	Price                 float64        `json:"price"`
-	Images                *common.Images `json:"images"`
+	Images                *common.Images `json:"-"`
+	ImagesID              []int          `json:"images_id" gorm:"-"`
 }
 
 func (FoodCreate) TableName() string {
