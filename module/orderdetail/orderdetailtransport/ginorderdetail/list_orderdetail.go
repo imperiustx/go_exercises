@@ -28,7 +28,7 @@ func ListOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 		if err := c.ShouldBind(&order); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}
-		
+
 		paging.Fulfill()
 
 		db := appCtx.GetDBConnection()
@@ -41,7 +41,7 @@ func ListOrderDetail(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		for i := range orderDetails {
-			orderDetails[i].GenUID(common.DBTypeOrderDetail, 1)
+			orderDetails[i].GenUID(common.DBTypeOrderDetail, common.DBTypeOrder, 1)
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(orderDetails, paging, nil))

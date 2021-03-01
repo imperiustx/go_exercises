@@ -26,6 +26,7 @@ func (j *jwtProvider) Generate(data tokenprovider.TokenPayload, expiry int) (*to
 		data,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Second * time.Duration(expiry)).Unix(),
+			IssuedAt:  time.Now().Local().Unix(),
 		},
 	})
 

@@ -43,10 +43,10 @@ func (s *sqlStore) ListFoodByCategoryID(
 	}
 
 	if o := order; o != nil {
-		if o.Order == "asc" {
+		switch o.Order {
+		case "asc":
 			db = db.Order("id asc")
-		}
-		if o.Order == "desc" {
+		case "desc":
 			db = db.Order("id desc")
 		}
 	}

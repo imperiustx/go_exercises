@@ -10,6 +10,7 @@ import (
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantbusiness"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantmodel"
 	"github.com/imperiustx/go_excercises/module/restaurant/restaurantstorage"
+	"github.com/imperiustx/go_excercises/module/upload/uploadstorage"
 )
 
 // CreateRestaurant a restaurant
@@ -24,7 +25,8 @@ func CreateRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 
 		db := appCtx.GetDBConnection()
 		store := restaurantstorage.NewSQLStore(db)
-		bizRestaurant := restaurantbusiness.NewCreateRestaurantBiz(store)
+		imgStore := uploadstorage.NewSQLStore(db)
+		bizRestaurant := restaurantbusiness.NewCreateRestaurantBiz(store, imgStore)
 
 		oid, err := common.FromBase58(restaurant.OwnerID)
 		if err != nil {

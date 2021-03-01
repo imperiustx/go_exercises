@@ -12,9 +12,11 @@ type Image struct {
 	URL       string `json:"url"`
 	Width     int    `json:"width"`
 	Height    int    `json:"height"`
-	CloudName string `json:"cloud_name,omitempty"`
-	Extension string `json:"extension,omitempty"`
+	CloudName string `json:"cloud_name,omitempty" gorm:"-"`
+	Extension string `json:"extension,omitempty" gorm:"-"`
 }
+
+func (Image) TableName() string { return "images" }
 
 func (j *Image) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
